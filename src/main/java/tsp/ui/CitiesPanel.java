@@ -10,12 +10,15 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
+import org.apache.log4j.Logger;
+
 import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm.Tour;
 import tsp.ui.DrawerFactory.DrawerType;
 
 public class CitiesPanel extends JPanel implements MouseInputListener {
 	private static final long serialVersionUID = 1L;
+	private static final Logger logger = Logger.getLogger(CitiesPanel.class);
 
 	Dimension preferredSize = new Dimension(400, 75);
 
@@ -73,7 +76,7 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 	public void mousePressed(MouseEvent e) {
 		setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
 		cities.add(new City(e.getX(), e.getY()));
-		System.out.println(cities.size() + "  " + e.getPoint());
+		logger.debug(cities.size() + "  " + e.getPoint());
 		repaint();
 	}
 

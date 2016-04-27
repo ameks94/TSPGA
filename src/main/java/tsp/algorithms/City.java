@@ -17,6 +17,13 @@ public class City {
 		this.x = x;
 		this.y = y;
 	}
+	
+	public City(int x, int y, int id) {
+		this.x = x;
+		this.y = y;
+		this.id = id;
+	}
+
 
 	// Gets city's x coordinate
 	public int getX() {

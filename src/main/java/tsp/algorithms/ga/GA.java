@@ -14,7 +14,7 @@ public class GA extends TSAlgorithm {
 	private static final int tournamentSize = 10;	
 	private static final boolean elitism = true;
 	private static final int populationCount = 100;
-	private static final int generationCount = 1000;
+	
 
 	public GA(GAMainWindow mainWindow) {
 		super(mainWindow);
@@ -27,7 +27,6 @@ public class GA extends TSAlgorithm {
 		while (true) {
 			pop = evolvePopulation(pop);
 			drawCurrentResult(pop.getFittest());
-			
 		}
 	}
 	
@@ -35,8 +34,8 @@ public class GA extends TSAlgorithm {
 	// Evolves a population over one generation
 	private Population evolvePopulation(Population pop) {
 		Population newPopulation = new Population(pop.populationSize(), cities, false);
-		//TODO show iteration...
-		//TODO show elite genome every iteration
+		//TODO + show iteration...
+		//TODO + show elite genome every iteration
 		//TODO show parents + child
 		//TODO % улучшения значения для елиты
 		//TODO как только элита перестала повышать результат... даем мутацию...

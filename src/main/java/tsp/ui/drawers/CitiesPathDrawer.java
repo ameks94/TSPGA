@@ -25,11 +25,13 @@ public class CitiesPathDrawer extends DrawerStrategy{
 		for (int i = 0; i < size - 1; i++) {
 			curCity = cities.get(i);
 			nextCity = cities.get(i + 1);
+			g.drawString(String.valueOf(curCity.getId()), curCity.getX(), curCity.getY() - 10);
 			g.drawRect(curCity.getX() - pointWidth / 2, curCity.getY() - pointWidth / 2, pointWidth, pointWidth);
 			g.drawLine(curCity.getX(), curCity.getY(), nextCity.getX(), nextCity.getY());
 		}
 		//draw from end to start
 		if (nextCity != null) {
+			g.drawString(String.valueOf(nextCity.getId()), nextCity.getX(), nextCity.getY() - 10);
 			g.drawRect(nextCity.getX() - pointWidth / 2, nextCity.getY() - pointWidth / 2, pointWidth, pointWidth);
 			g.drawLine(nextCity.getX(), nextCity.getY(), cities.get(0).getX(), cities.get(0).getY());
 		}

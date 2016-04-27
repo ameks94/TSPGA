@@ -7,10 +7,13 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
+import org.apache.log4j.Logger;
+
 import tsp.ui.CitiesPanel;
 import tsp.ui.GAMainWindow;
 
 public abstract class TSAlgorithm implements Runnable {
+	private static final Logger logger = Logger.getLogger(TSAlgorithm.class);
 	protected List<City> cities;
 	protected double[][] distances;
 
@@ -20,6 +23,8 @@ public abstract class TSAlgorithm implements Runnable {
 	private double lastDistance;
 	private GAMainWindow mainWindow;
 	private JTextArea textArea;
+	
+	private int iterationCount = 1;
 
 	public TSAlgorithm(GAMainWindow mainWindow) {
 		this.mainWindow = mainWindow;
@@ -35,11 +40,22 @@ public abstract class TSAlgorithm implements Runnable {
 	// for GA
 	protected void drawCurrentResult(Tour currTour) {
 		// currentResult = currTour;
-		String currDistance = String.valueOf(currTour.getFitness());
-		textArea.append("Distance: " + currDistance + "\n");
+		String iteration = "Interation: " + iterationCount++;
+		logger.debug(iteration);
+		textArea.append(iteration + "\n");
+		String tour = "Tour: " + currTour.toString();
+		logger.debug(tour);
+		textArea.append(tour + "\n");
+		String currDistance = String.valueOf(currTour.getFitness());;
+		logger.debug(currDistance);
+		textArea.append(currDistance + "\n\n");
 		outputPanel.setRoutine(currTour.copyTour());
 		outputLabel.setText(currDistance);
 		outputPanel.repaint();
+	}
+	
+	protected void showElitGenome(Tour elite) {
+		
 	}
 
 	// for algorithms that can finish calculation
@@ -181,7 +197,7 @@ public abstract class TSAlgorithm implements Runnable {
 		public Tour copyTour() {
 			List<City> newCities = new ArrayList<>();
 			for (City city : this.tourCities) {
-				newCities.add(new City(city.x, city.y));
+				newCities.add(new City(city.x, city.y, city.id));
 			}
 			return new Tour(newCities);
 		}
@@ -190,7 +206,7 @@ public abstract class TSAlgorithm implements Runnable {
 		public String toString() {
 			String geneString = "|";
 			for (int i = 0; i < tourSize(); i++) {
-				geneString += getCity(i) + "|";
+				geneString += getCity(i).id + "|";
 			}
 			return geneString;
 		}

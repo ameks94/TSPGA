@@ -51,7 +51,7 @@ public class GAMainWindow extends JFrame {
 	public GAMainWindow() {
 		super("GA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1293, 581);
+		setBounds(100, 100, 903, 724);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -59,7 +59,7 @@ public class GAMainWindow extends JFrame {
 
 		// Panel for drawing
 		panel = new CitiesPanel();
-		panel.setBounds(12, 41, 886, 491);
+		panel.setBounds(12, 41, 855, 417);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		panel.setBackground(Color.WHITE);
 		panel.setLayout(new GridLayout(1, 2));
@@ -86,8 +86,7 @@ public class GAMainWindow extends JFrame {
 					setCalculated(true);
 					if (runningAlgorythm != null) {
 						runningAlgorythm.stop();
-						panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
-						panel.setShowCalculation(false);
+
 					}
 					
 				}
@@ -102,6 +101,9 @@ public class GAMainWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				panel.clearAll();
 				panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
+				textArea.setText("");
+				panel.setShowCalculation(false);
+				panel.repaint();
 			}
 		});
 		contentPane.add(btnClear);
@@ -188,13 +190,14 @@ public class GAMainWindow extends JFrame {
 		contentPane.add(label);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(912, 41, 355, 491);
+		scrollPane.setBounds(12, 469, 855, 214);
 		contentPane.add(scrollPane);
 		
 		textArea = new JTextArea();
+		scrollPane.setViewportView(textArea);
 		textArea.setWrapStyleWord(true);
 		textArea.setEditable(false);
-		scrollPane.setViewportView(textArea);
+		textArea.setSelectionColor(Color.GRAY);
 	}
 	
 	public void setCalculated(boolean calculated) {
