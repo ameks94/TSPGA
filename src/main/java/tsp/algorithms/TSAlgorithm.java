@@ -204,10 +204,11 @@ public abstract class TSAlgorithm implements Runnable {
 
 		@Override
 		public String toString() {
-			String geneString = "|";
+			String geneString = "";
 			for (int i = 0; i < tourSize(); i++) {
-				geneString += getCity(i).id + "|";
+				geneString += getCity(i).id + " -> ";
 			}
+			geneString += getCity(0).id;
 			return geneString;
 		}
 	}
