@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
-import javax.swing.JTextArea;
 
 import org.apache.log4j.Logger;
 
 import tsp.ui.CitiesPanel;
 import tsp.ui.GAMainWindow;
+import tsp.utils.CurrentResultForShowing;
 
 public abstract class TSAlgorithm implements Runnable {
 	private static final Logger logger = Logger.getLogger(TSAlgorithm.class);
@@ -22,7 +23,7 @@ public abstract class TSAlgorithm implements Runnable {
 	// private Tour currentResult;
 	private double lastDistance;
 	private GAMainWindow mainWindow;
-	private JTextArea textArea;
+	private DefaultListModel textArea;
 	
 	private int iterationCount = 1;
 
@@ -34,24 +35,25 @@ public abstract class TSAlgorithm implements Runnable {
 		this.outputLabel = mainWindow.getOutputLable();
 		this.lastDistance = new Tour(cities).getDistance();
 		this.textArea = mainWindow.getTextArea();
-
 	}
 
 	// for GA
 	protected void drawCurrentResult(Tour currTour) {
-		// currentResult = currTour;
-		String iteration = "Interation: " + iterationCount++;
-		logger.debug(iteration);
-		textArea.append(iteration + "\n");
-		String tour = "Tour: " + currTour.toString();
-		logger.debug(tour);
-		textArea.append(tour + "\n");
-		String currDistance = String.valueOf(currTour.getFitness());;
-		logger.debug(currDistance);
-		textArea.append(currDistance + "\n\n");
-		outputPanel.setRoutine(currTour.copyTour());
-		outputLabel.setText(currDistance);
-		outputPanel.repaint();
+		double currDist = currTour.getFitness();
+		if (currDist != lastDistance) {
+			Tour copyTour = currTour.copyTour();
+			CurrentResultForShowing currResult = new CurrentResultForShowing();
+			currResult.setTour(copyTour);
+			currResult.setDistance(currDist);
+			currResult.setIteration(iterationCount);
+			logger.debug(currResult);
+			textArea.addElement(currResult);
+			outputPanel.setRoutine(currResult.getTour());
+			outputLabel.setText(String.valueOf(currResult.getDistance()));
+			outputPanel.repaint();
+		}
+		lastDistance = currDist;
+		iterationCount++;
 	}
 	
 	protected void showElitGenome(Tour elite) {

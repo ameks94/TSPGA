@@ -15,7 +15,7 @@ public class GeneratorHelper {
 			Random random = new Random();
 			x = random.nextInt(xMax);
 			y = random.nextInt(yMax);
-			City city = new City(x, y);
+			City city = new City(x, y, i);
 			cities.add(city);
 		}
 		return cities;

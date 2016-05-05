@@ -16,7 +16,8 @@ public class CitiesDrawer extends DrawerStrategy{
 		// If user has chosen a point, paint a small dot on top.
 		if (areCitiesValid(cities)) {
 			for (City c : cities) {
-				g.drawRect(c.getX() - pointWidth / 2, c.getY() - pointWidth / 2, pointWidth, pointWidth);;
+				g.drawString(String.valueOf(c.getId()), c.getX(), c.getY() - 10);
+				g.drawRect(c.getX() - pointWidth / 2, c.getY() - pointWidth / 2, pointWidth, pointWidth);
 			}
 		}
 	}

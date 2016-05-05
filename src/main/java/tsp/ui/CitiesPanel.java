@@ -75,7 +75,7 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
-		cities.add(new City(e.getX(), e.getY()));
+		cities.add(new City(e.getX(), e.getY(), cities.size()));
 		logger.debug(cities.size() + "  " + e.getPoint());
 		repaint();
 	}
