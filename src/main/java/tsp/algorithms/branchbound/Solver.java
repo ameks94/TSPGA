@@ -5,7 +5,7 @@ import java.util.List;
 
 import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
-import tsp.ui.GAMainWindow;
+import tsp.ui.forms.GAMainWindow;
 
 /**
  * Solves the traveling salesman problem using Branch and Bound by utilizing Node's
@@ -114,7 +114,8 @@ public class Solver extends TSAlgorithm{
 			result.add(cities.get(currCityNumber));
 		}
 		Tour opt = new Tour(result);
-		drawFinalResult(opt);
+		setResult(opt);
+		drawFinalResult();
 	}
 
 //	@Override

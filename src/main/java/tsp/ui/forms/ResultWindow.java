@@ -1,4 +1,4 @@
-package tsp.ui;
+package tsp.ui.forms;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -12,6 +12,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import tsp.ui.CitiesPanel;
+import tsp.ui.DrawerFactory;
 import tsp.ui.DrawerFactory.DrawerType;
 import tsp.utils.CurrentResultForShowing;
 
@@ -52,8 +54,7 @@ public class ResultWindow extends JFrame {
 			CurrentResultForShowing selectedResult = (CurrentResultForShowing)listModel.get(list.getSelectedIndex());
 			outputPanel.clearAll();
 			outputPanel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.CitiesPath));
-			outputPanel.setShowCalculation(true);
-			outputPanel.setRoutine(selectedResult.getTour());
+			outputPanel.setCurrentTour(selectedResult.getTour());
 			outputLabel.setText(String.valueOf(selectedResult.getDistance()));
 			outputPanel.repaint();
 		}

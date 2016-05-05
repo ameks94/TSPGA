@@ -5,7 +5,7 @@ import java.util.List;
 import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
 import tsp.algorithms.TSAlgorithm.Tour;
-import tsp.ui.GAMainWindow;
+import tsp.ui.forms.GAMainWindow;
 
 public class GA extends TSAlgorithm {
 
@@ -26,7 +26,7 @@ public class GA extends TSAlgorithm {
 		pop = evolvePopulation(pop);
 		while (true) {
 			pop = evolvePopulation(pop);
-			drawCurrentResult(pop.getFittest());
+			setResult(pop.getFittest());
 		}
 	}
 	

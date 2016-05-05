@@ -3,7 +3,7 @@ package tsp;
 
 import java.awt.EventQueue;
 
-import tsp.ui.GAMainWindow;
+import tsp.ui.forms.GAMainWindow;
 
 public class Main {
 	/**

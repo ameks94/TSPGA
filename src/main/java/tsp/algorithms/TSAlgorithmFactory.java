@@ -3,7 +3,7 @@ package tsp.algorithms;
 import tsp.algorithms.branchbound.Solver;
 import tsp.algorithms.ga.GA;
 import tsp.algorithms.greedy.GreedyAlgorithm;
-import tsp.ui.GAMainWindow;
+import tsp.ui.forms.GAMainWindow;
 
 public class TSAlgorithmFactory {
 	public enum AlgorithmType {

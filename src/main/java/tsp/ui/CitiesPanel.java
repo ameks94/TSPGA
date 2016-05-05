@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -13,7 +14,9 @@ import javax.swing.event.MouseInputListener;
 import org.apache.log4j.Logger;
 
 import tsp.algorithms.City;
+import tsp.algorithms.TSAlgorithm;
 import tsp.algorithms.TSAlgorithm.Tour;
+import tsp.algorithms.ga.GA;
 import tsp.ui.DrawerFactory.DrawerType;
 
 public class CitiesPanel extends JPanel implements MouseInputListener {
@@ -21,14 +24,11 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 	private static final Logger logger = Logger.getLogger(CitiesPanel.class);
 
 	Dimension preferredSize = new Dimension(400, 75);
-
-	private boolean showCalculation = false;
-
-	/**List of points, that user was set by mouse*/
-	private List<City> cities = new ArrayList<City>();
 	
-	private Tour currentTour;
-	private Tour lastTour;
+	/** List of points, that user was set by mouse */
+	private List<City> cities = new ArrayList<City>();
+
+	private List<City> currentTour;
 	/***/
 	private DrawerStrategy drawerStrategy;
 
@@ -39,51 +39,39 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 		setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
 	}
 
-	  public void setRoutine(Tour currentTour) {
-	        this.currentTour = currentTour;
-	    }
-	  
+	public void setCurrentTour(Tour currentTour) {
+		this.currentTour = currentTour.getCitiesPath();
+	}
+
 	@Override
 	public Dimension getPreferredSize() {
 		return preferredSize;
 	}
 
-	/**It rewrites panel according to cities list*/
+	/** It rewrites panel according to cities list */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		if (showCalculation) {
-//			if (lastTour != null) {
-//				g.setColor(Color.red);
-//				drawerStrategy.paintComponent(g, lastTour.getCitiesPath());
-//			}
-			if (currentTour != null) {
-				g.setColor(Color.black);
-				drawerStrategy.paintComponent(g, currentTour.getCitiesPath());
-				lastTour = currentTour;
-			}
-		} else {
-			if (isOpaque()) {
-				g.setColor(getBackground());
-				g.fillRect(0, 0, getWidth(), getHeight());
-			}
-			g.setColor(getForeground());
-			drawerStrategy.paintComponent(g, cities);
+		if (currentTour == null) {
+			currentTour = new ArrayList<>(cities);
 		}
+		g.setColor(Color.black);
+		drawerStrategy.paintComponent(g, currentTour);
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
 		cities.add(new City(e.getX(), e.getY(), cities.size()));
+		currentTour = null;
 		logger.debug(cities.size() + "  " + e.getPoint());
 		repaint();
 	}
 
-
-	////Cities functionality
+	//// Cities functionality
 	public void clearAll() {
 		cities = new ArrayList<City>();
+		currentTour = null;
 		repaint();
 	}
 
@@ -129,25 +117,10 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 
 	public void setCities(List<City> cities) {
 		this.cities = cities;
+		currentTour = null;
 	}
 
 	public void setDrawerStrategy(DrawerStrategy drawerStrategy) {
 		this.drawerStrategy = drawerStrategy;
-		lastTour = null;
 	}
-
-	public boolean isShowCalculation() {
-		return showCalculation;
-	}
-
-	public void setShowCalculation(boolean showCalculation) {
-		this.showCalculation = showCalculation;
-	}
-
-
-
-	//	public void setLogger(LoggerUI logger) {
-	//		this.logger = logger;
-	//	}
-
 }

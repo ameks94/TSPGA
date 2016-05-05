@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import org.apache.log4j.Logger;
 
 import tsp.ui.CitiesPanel;
-import tsp.ui.GAMainWindow;
+import tsp.ui.forms.GAMainWindow;
 import tsp.utils.CurrentResultForShowing;
 
 public abstract class TSAlgorithm implements Runnable {
@@ -20,50 +20,55 @@ public abstract class TSAlgorithm implements Runnable {
 
 	private CitiesPanel outputPanel;
 	private JLabel outputLabel;
-	// private Tour currentResult;
+	private Tour currentResult;
 	private double lastDistance;
 	private GAMainWindow mainWindow;
 	private DefaultListModel textArea;
 	
+	private boolean needShowResult = false;
+
 	private int iterationCount = 1;
 
 	public TSAlgorithm(GAMainWindow mainWindow) {
 		this.mainWindow = mainWindow;
 		this.cities = mainWindow.getCities();
-		initializeDistances();
 		this.outputPanel = mainWindow.getOutputPanel();
 		this.outputLabel = mainWindow.getOutputLable();
-		this.lastDistance = new Tour(cities).getDistance();
 		this.textArea = mainWindow.getTextArea();
+		this.needShowResult = mainWindow.isDrawingNeeded();
+		initializeDistances();
+	}
+	
+	protected void setResult(Tour currentResult) {
+		this.currentResult = currentResult;
+		if (needShowResult) {
+			drawCurrentResult();
+		}
 	}
 
 	// for GA
-	protected void drawCurrentResult(Tour currTour) {
-		double currDist = currTour.getFitness();
+	protected void drawCurrentResult() {
+		double currDist = currentResult.getFitness();
 		if (currDist != lastDistance) {
-			Tour copyTour = currTour.copyTour();
+			Tour copyTour = currentResult.copyTour();
 			CurrentResultForShowing currResult = new CurrentResultForShowing();
 			currResult.setTour(copyTour);
 			currResult.setDistance(currDist);
 			currResult.setIteration(iterationCount);
+			outputLabel.setText(String.valueOf(currResult.getDistance()));
+			outputPanel.setCurrentTour(currResult.getTour());
+			outputPanel.repaint();
 			logger.debug(currResult);
 			textArea.addElement(currResult);
-			outputPanel.setRoutine(currResult.getTour());
-			outputLabel.setText(String.valueOf(currResult.getDistance()));
-			outputPanel.repaint();
 		}
 		lastDistance = currDist;
 		iterationCount++;
 	}
-	
-	protected void showElitGenome(Tour elite) {
-		
-	}
 
 	// for algorithms that can finish calculation
-	protected void drawFinalResult(Tour currTour) {
-		outputLabel.setText(String.valueOf(currTour.getDistance()));
-		outputPanel.setRoutine(currTour);
+	public void drawFinalResult() {
+		outputLabel.setText(String.valueOf(currentResult.getDistance()));
+		outputPanel.setCurrentTour(currentResult);
 		outputPanel.repaint();
 		setCalculated();
 	}
@@ -88,6 +93,8 @@ public abstract class TSAlgorithm implements Runnable {
 				distances[j][i] = distances[i][j];// копируем элементы верхней
 			}
 		}
+
+		this.lastDistance = new Tour(cities).getDistance();
 	}
 
 	public class Tour {

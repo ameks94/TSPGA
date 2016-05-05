@@ -1,4 +1,4 @@
-package tsp.ui;
+package tsp.ui.forms;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -22,6 +22,8 @@ import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
 import tsp.algorithms.TSAlgorithmFactory;
 import tsp.algorithms.TSAlgorithmFactory.AlgorithmType;
+import tsp.ui.CitiesPanel;
+import tsp.ui.DrawerFactory;
 import tsp.ui.DrawerFactory.DrawerType;
 import tsp.utils.DialogHelper;
 import tsp.utils.GeneratorHelper;
@@ -31,6 +33,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.DropMode;
 import javax.swing.JSplitPane;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 
 public class GAMainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -40,13 +43,15 @@ public class GAMainWindow extends JFrame {
 	private JComboBox<AlgorithmType> cbAlgorithm;
 	private JLabel lblOptimalTour;
 	private JButton btnCalculate;
-	
+
 	private ResultWindow resultWindow;
 	// private TextArea logArea;
 	// private JLabel lblLog;
 	private final String startCalculationText = "Розрахувати";
 	private final String stopCalculationText = "Зупинити обрахунок";
 	private Thread runningAlgorythm;
+	private TSAlgorithm algorithm;
+	private JCheckBox showDrawingChbx;
 
 	/**
 	 * Create the frame.
@@ -54,76 +59,68 @@ public class GAMainWindow extends JFrame {
 	public GAMainWindow() {
 		super("GA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 903, 724);
+		setBounds(100, 100, 852, 688);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JPanel ButtonsPanel = new JPanel();
-		ButtonsPanel.setBounds(21, 7, 845, 23);
-		contentPane.add(ButtonsPanel);
-		ButtonsPanel.setLayout(null);
+		// Panel for drawing
+		panel = new CitiesPanel();
+		panel.setBounds(10, 11, 657, 634);
+		contentPane.add(panel);
+		panel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
+		panel.setBackground(Color.WHITE);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+		JLabel lblAlgorithm = new JLabel("Алгоритм");
+		lblAlgorithm.setBounds(711, 11, 81, 14);
+		contentPane.add(lblAlgorithm);
+		lblAlgorithm.setHorizontalAlignment(SwingConstants.CENTER);
+
+		cbAlgorithm = new JComboBox<AlgorithmType>();
+		cbAlgorithm.setBounds(677, 36, 150, 21);
+		contentPane.add(cbAlgorithm);
 
 		btnCalculate = new JButton(startCalculationText);
-		btnCalculate.setBounds(166, 0, 123, 23);
-		ButtonsPanel.add(btnCalculate);
+		btnCalculate.setBounds(677, 107, 150, 23);
+		contentPane.add(btnCalculate);
 		btnCalculate.setBackground(Color.GREEN);
 
 		JButton btnClear = new JButton("Очистити");
-		btnClear.setBounds(299, 0, 95, 23);
-		ButtonsPanel.add(btnClear);
-
-		cbAlgorithm = new JComboBox<AlgorithmType>();
-		cbAlgorithm.setBounds(73, 1, 83, 21);
-		ButtonsPanel.add(cbAlgorithm);
-
-		JLabel lblAlgorithm = new JLabel("Алгоритм");
-		lblAlgorithm.setBounds(0, 4, 81, 14);
-		ButtonsPanel.add(lblAlgorithm);
-		lblAlgorithm.setHorizontalAlignment(SwingConstants.CENTER);
-
-		JButton btnTestchart = new JButton("Тестувати");
-		btnTestchart.setBounds(529, 0, 100, 23);
-		ButtonsPanel.add(btnTestchart);
+		btnClear.setBounds(677, 175, 150, 23);
+		contentPane.add(btnClear);
 
 		JButton btnGenerate = new JButton("Генерувати");
-		btnGenerate.setBounds(404, 0, 115, 23);
-		ButtonsPanel.add(btnGenerate);
+		btnGenerate.setBounds(677, 141, 150, 23);
+		contentPane.add(btnGenerate);
+
+		JButton btnTestchart = new JButton("Тестувати");
+		btnTestchart.setBounds(677, 209, 150, 23);
+		contentPane.add(btnTestchart);
 
 		JLabel labelConstOptTour = new JLabel("Найкоротший шлях:");
-		labelConstOptTour.setBounds(632, 4, 115, 14);
-		ButtonsPanel.add(labelConstOptTour);
+		labelConstOptTour.setBounds(687, 243, 115, 14);
+		contentPane.add(labelConstOptTour);
 
 		lblOptimalTour = new JLabel("");
-		lblOptimalTour.setBounds(762, 0, 83, 23);
-		ButtonsPanel.add(lblOptimalTour);
+		lblOptimalTour.setBounds(698, 268, 83, 23);
+		contentPane.add(lblOptimalTour);
 		lblOptimalTour.setForeground(Color.GREEN);
 		lblOptimalTour.setFont(new Font("Tahoma", Font.PLAIN, 16));
+
+		showDrawingChbx = new JCheckBox("Показати результати");
+		showDrawingChbx.setSelected(true);
+		showDrawingChbx.setBounds(676, 75, 151, 23);
+		contentPane.add(showDrawingChbx);
 		
-				// Panel for drawing
-				panel = new CitiesPanel();
-				panel.setBounds(17, 41, 853, 634);
-				contentPane.add(panel);
-				panel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-				panel.setBackground(Color.WHITE);
-				panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		btnGenerate.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFrame frame = new JFrame("Кількість міст?");
-				int citiesCount = DialogHelper.getIntegerValueDialog(frame, "Кількість міст для генерації:");
-				if (citiesCount == 0) {
-					return;
-				}
-				List<City> cities = GeneratorHelper.generateCities(citiesCount, panel.getWidth() - 10,
-						panel.getHeight() - 10);
-				panel.setCities(cities);
-				panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
-				panel.setShowCalculation(false);
-				panel.repaint();
-			}
-		});
+		JLabel lblNewLabel = new JLabel("Кількість міст:");
+		lblNewLabel.setBounds(687, 302, 103, 14);
+		contentPane.add(lblNewLabel);
+		
+		JLabel citiesCountLbl = new JLabel("0");
+		citiesCountLbl.setBounds(722, 327, 46, 14);
+		contentPane.add(citiesCountLbl);
 		btnTestchart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -175,6 +172,22 @@ public class GAMainWindow extends JFrame {
 				// chart2.setVisible( true );
 			}
 		});
+
+		btnGenerate.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFrame frame = new JFrame("Кількість міст?");
+				int citiesCount = DialogHelper.getIntegerValueDialog(frame, "Кількість міст для генерації:");
+				if (citiesCount == 0) {
+					return;
+				}
+				List<City> cities = GeneratorHelper.generateCities(citiesCount, panel.getWidth() - 10,
+						panel.getHeight() - 10);
+				panel.setCities(cities);
+				panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
+				panel.repaint();
+			}
+		});
 		btnClear.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -183,7 +196,6 @@ public class GAMainWindow extends JFrame {
 				if (resultWindow != null && resultWindow.isShowing()) {
 					resultWindow.hide();
 				}
-				panel.setShowCalculation(false);
 				panel.repaint();
 			}
 		});
@@ -192,20 +204,22 @@ public class GAMainWindow extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (getCities() == null || getCities().isEmpty())
 					return;
+				citiesCountLbl.setText(String.valueOf(getCities().size()));
 				if (btnCalculate.getText().equals(startCalculationText)) {
 					setCalculated(false);
 					panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.CitiesPath));
-					panel.setShowCalculation(true);
-					
-					if (resultWindow != null && resultWindow.isShowing()) {
-						resultWindow.hide();
+
+					if (isDrawingNeeded()) {
+						if (resultWindow != null && resultWindow.isShowing()) {
+							resultWindow.hide();
+						}
+						resultWindow = new ResultWindow(getOutputPanel(), getOutputLable());
+						resultWindow.setVisible(true);
 					}
-					resultWindow = new ResultWindow(getOutputPanel(), getOutputLable());
-					resultWindow.setVisible(true);
 					
 					AlgorithmType selectedType = (AlgorithmType) cbAlgorithm.getSelectedItem();
 
-					TSAlgorithm algorithm = TSAlgorithmFactory.getTSAlgorithm(selectedType, getMainWindow());
+					algorithm = TSAlgorithmFactory.getTSAlgorithm(selectedType, getMainWindow());
 					runningAlgorythm = new Thread(algorithm);
 					runningAlgorythm.start();
 
@@ -213,9 +227,8 @@ public class GAMainWindow extends JFrame {
 					setCalculated(true);
 					if (runningAlgorythm != null) {
 						runningAlgorythm.stop();
-
+						algorithm.drawFinalResult();
 					}
-
 				}
 			}
 		});
@@ -232,6 +245,10 @@ public class GAMainWindow extends JFrame {
 			btnCalculate.setText(stopCalculationText);
 			btnCalculate.setBackground(Color.RED);
 		}
+	}
+	
+	public boolean isDrawingNeeded() {
+		return showDrawingChbx.isSelected();
 	}
 
 	public List<City> getCities() {

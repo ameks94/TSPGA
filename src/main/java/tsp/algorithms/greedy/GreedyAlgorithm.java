@@ -5,7 +5,7 @@ import java.util.List;
 
 import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
-import tsp.ui.GAMainWindow;
+import tsp.ui.forms.GAMainWindow;
 
 public class GreedyAlgorithm extends TSAlgorithm{
 	public GreedyAlgorithm(GAMainWindow mainWindow) {
@@ -23,7 +23,8 @@ public class GreedyAlgorithm extends TSAlgorithm{
 	@Override
 	public void run() {
 		processCity(cities.get(0));
-		drawFinalResult(new Tour(optCities));
+		setResult(new Tour(optCities));
+		drawFinalResult();
 	}
 
 	private int visitedSum = 0;
