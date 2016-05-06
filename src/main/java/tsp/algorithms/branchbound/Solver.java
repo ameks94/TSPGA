@@ -5,7 +5,7 @@ import java.util.List;
 
 import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
-import tsp.ui.forms.GAMainWindow;
+import tsp.ui.GAMainWindow;
 
 /**
  * Solves the traveling salesman problem using Branch and Bound by utilizing Node's
@@ -90,14 +90,18 @@ public class Solver extends TSAlgorithm{
 	 * @param parent The root/parent node
 	 */
 	private void traverse(Node parent) {
+		if (!needCalculate) {
+			return;
+		}
 		Node[] children = parent.generateChildren();
-
+		
 		for(Node child : children) {
 			if(child.isTerminal()) {
 				double cost = child.getPathCost();
 				if(cost < best_cost) {
 					best_cost = cost;
 					best_path = child.getPath();
+					setResult(getTourFrom(best_path));
 				}
 			}
 			else if(child.getLowerBound() <= best_cost) {
@@ -106,15 +110,19 @@ public class Solver extends TSAlgorithm{
 		}
 	}
 	
-	public void run() {
-		int[] path = calculate();
+	private Tour getTourFrom(int[] path) {
 		List<City> result = new ArrayList<City>();
 		for (int i = 0; i < cities.size(); i++) {
 			int currCityNumber = path[i];
 			result.add(cities.get(currCityNumber));
 		}
 		Tour opt = new Tour(result);
-		setResult(opt);
+		return opt;
+	}
+	
+	public void run() {
+		int[] path = calculate();
+		setResult(getTourFrom(path));
 		drawFinalResult();
 	}
 

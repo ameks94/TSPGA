@@ -5,7 +5,7 @@ import java.util.List;
 
 import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
-import tsp.ui.forms.GAMainWindow;
+import tsp.ui.GAMainWindow;
 
 public class GreedyAlgorithm extends TSAlgorithm{
 	public GreedyAlgorithm(GAMainWindow mainWindow) {

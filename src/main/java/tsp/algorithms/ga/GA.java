@@ -4,8 +4,7 @@ import java.util.List;
 
 import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
-import tsp.algorithms.TSAlgorithm.Tour;
-import tsp.ui.forms.GAMainWindow;
+import tsp.ui.GAMainWindow;
 
 public class GA extends TSAlgorithm {
 
@@ -23,10 +22,10 @@ public class GA extends TSAlgorithm {
 	@Override
 	public void run() {
 		Population pop = new Population(populationCount, cities, true);
-		pop = evolvePopulation(pop);
-		while (true) {
+		while (needCalculate) {
 			pop = evolvePopulation(pop);
 			setResult(pop.getFittest());
+			iterationCount++;
 		}
 	}
 	
@@ -69,32 +68,33 @@ public class GA extends TSAlgorithm {
 
 	// Applies crossover to a set of parents and creates offspring
 	private Tour crossover(Tour parent1, Tour parent2) {
+		int tourSize = cities.size();
 		// Create new child tour
-		Tour child = new Tour(cities.size());
-
+		Tour child = new Tour(tourSize);
+		
 		// Get start and end sub tour positions for parent1's tour
-		int startPos = (int) (Math.random() * parent1.tourSize());
-		int endPos = (int) (Math.random() * parent1.tourSize());
+		int startPos = (int) (Math.random() * tourSize);
+		int endPos = (int) (Math.random() * tourSize);
 
 		// Loop and add the sub tour from parent1 to our child
-		for (int i = 0; i < child.tourSize(); i++) {
+		for (int i = 0; i < tourSize; i++) {
 			// If our start position is less than the end position
 			if (startPos < endPos && i > startPos && i < endPos) {
 				child.setCity(i, parent1.getCity(i));
 			} // If our start position is larger
 			else if (startPos > endPos) {
-				if (!(i < startPos && i > endPos)) {
+				if (!(i > endPos && i < startPos)) {
 					child.setCity(i, parent1.getCity(i));
 				}
 			}
 		}
-
+		
 		// Loop through parent2's city tour
-		for (int i = 0; i < parent2.tourSize(); i++) {
+		for (int i = 0; i < tourSize; i++) {
 			// If child doesn't have the city add it
 			if (!child.containsCity(parent2.getCity(i))) {
 				// Loop to find a spare position in the child's tour
-				for (int ii = 0; ii < child.tourSize(); ii++) {
+				for (int ii = 0; ii < tourSize; ii++) {
 					// Spare position found, add city
 					if (child.getCity(ii) == null) {
 						child.setCity(ii, parent2.getCity(i));
@@ -103,6 +103,7 @@ public class GA extends TSAlgorithm {
 				}
 			}
 		}
+
 		return child;
 	}
 
@@ -132,7 +133,7 @@ public class GA extends TSAlgorithm {
 		Population tournament = new Population(tournamentSize, cities, false);
 		// For each place in the tournament get a random candidate tour and
 		// add it
-		for (int i = 0; i < tournamentSize; i++) {
+		for (int i = 0; i < tournament.populationSize(); i++) {
 			int randomId = (int) (Math.random() * pop.populationSize());
 			tournament.saveTour(i, pop.getTour(randomId));
 		}

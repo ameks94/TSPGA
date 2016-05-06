@@ -1,7 +1,4 @@
-package tsp.ui;
-
-import tsp.ui.drawers.CitiesDrawer;
-import tsp.ui.drawers.CitiesPathDrawer;
+package tsp.ui.drawers;
 
 public class DrawerFactory {
 	public enum DrawerType {

@@ -17,7 +17,9 @@ import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
 import tsp.algorithms.TSAlgorithm.Tour;
 import tsp.algorithms.ga.GA;
-import tsp.ui.DrawerFactory.DrawerType;
+import tsp.ui.drawers.DrawerFactory;
+import tsp.ui.drawers.DrawerStrategy;
+import tsp.ui.drawers.DrawerFactory.DrawerType;
 
 public class CitiesPanel extends JPanel implements MouseInputListener {
 	private static final long serialVersionUID = 1L;

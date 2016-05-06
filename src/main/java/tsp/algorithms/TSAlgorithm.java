@@ -10,59 +10,63 @@ import javax.swing.JLabel;
 import org.apache.log4j.Logger;
 
 import tsp.ui.CitiesPanel;
-import tsp.ui.forms.GAMainWindow;
+import tsp.ui.GAMainWindow;
 import tsp.utils.CurrentResultForShowing;
 
 public abstract class TSAlgorithm implements Runnable {
 	private static final Logger logger = Logger.getLogger(TSAlgorithm.class);
 	protected List<City> cities;
 	protected double[][] distances;
-
+	protected int iterationCount = 1;
+	
+	protected boolean needCalculate = true;
+	
 	private CitiesPanel outputPanel;
 	private JLabel outputLabel;
 	private Tour currentResult;
 	private double lastDistance;
+	private double currDistance;
 	private GAMainWindow mainWindow;
-	private DefaultListModel textArea;
+	private DefaultListModel iterationResultArea;
 	
 	private boolean needShowResult = false;
 
-	private int iterationCount = 1;
+	
 
 	public TSAlgorithm(GAMainWindow mainWindow) {
 		this.mainWindow = mainWindow;
 		this.cities = mainWindow.getCities();
 		this.outputPanel = mainWindow.getOutputPanel();
 		this.outputLabel = mainWindow.getOutputLable();
-		this.textArea = mainWindow.getTextArea();
+		this.iterationResultArea = mainWindow.getTextArea();
 		this.needShowResult = mainWindow.isDrawingNeeded();
 		initializeDistances();
 	}
 	
 	protected void setResult(Tour currentResult) {
 		this.currentResult = currentResult;
-		if (needShowResult) {
+		this.currDistance = currentResult.getFitness();
+		if (needShowResult && currDistance != lastDistance) {
 			drawCurrentResult();
 		}
+	}
+	
+	public void stopCalculation() {
+		needCalculate = false;
 	}
 
 	// for GA
 	protected void drawCurrentResult() {
-		double currDist = currentResult.getFitness();
-		if (currDist != lastDistance) {
-			Tour copyTour = currentResult.copyTour();
-			CurrentResultForShowing currResult = new CurrentResultForShowing();
-			currResult.setTour(copyTour);
-			currResult.setDistance(currDist);
-			currResult.setIteration(iterationCount);
-			outputLabel.setText(String.valueOf(currResult.getDistance()));
-			outputPanel.setCurrentTour(currResult.getTour());
-			outputPanel.repaint();
-			logger.debug(currResult);
-			textArea.addElement(currResult);
-		}
-		lastDistance = currDist;
-		iterationCount++;
+		CurrentResultForShowing currResult = new CurrentResultForShowing();
+		currResult.setTour(currentResult.copyTour());
+		currResult.setDistance(currDistance);
+		currResult.setIteration(iterationCount);
+		outputLabel.setText(String.valueOf(currResult.getDistance()));
+		outputPanel.setCurrentTour(currResult.getTour());
+		outputPanel.repaint();
+		logger.debug(currResult);
+		iterationResultArea.addElement(currResult);
+		lastDistance = currDistance;
 	}
 
 	// for algorithms that can finish calculation

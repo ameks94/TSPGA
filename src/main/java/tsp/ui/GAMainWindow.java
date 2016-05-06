@@ -1,4 +1,4 @@
-package tsp.ui.forms;
+package tsp.ui;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -22,9 +22,8 @@ import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
 import tsp.algorithms.TSAlgorithmFactory;
 import tsp.algorithms.TSAlgorithmFactory.AlgorithmType;
-import tsp.ui.CitiesPanel;
-import tsp.ui.DrawerFactory;
-import tsp.ui.DrawerFactory.DrawerType;
+import tsp.ui.drawers.DrawerFactory;
+import tsp.ui.drawers.DrawerFactory.DrawerType;
 import tsp.utils.DialogHelper;
 import tsp.utils.GeneratorHelper;
 import javax.swing.JList;
@@ -113,63 +112,17 @@ public class GAMainWindow extends JFrame {
 		showDrawingChbx.setSelected(true);
 		showDrawingChbx.setBounds(676, 75, 151, 23);
 		contentPane.add(showDrawingChbx);
-		
+
 		JLabel lblNewLabel = new JLabel("Кількість міст:");
 		lblNewLabel.setBounds(687, 302, 103, 14);
 		contentPane.add(lblNewLabel);
-		
+
 		JLabel citiesCountLbl = new JLabel("0");
 		citiesCountLbl.setBounds(722, 327, 46, 14);
 		contentPane.add(citiesCountLbl);
 		btnTestchart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// int citiesCount;
-				// JFrame citiesCountFrame = new JFrame("Скільки міст вам
-				// потрібно?");
-				// citiesCount =
-				// DialogHelper.getIntegerValueDialog(citiesCountFrame,
-				// "Кількість міст для генерації(не більше 20):");
-				//
-				// int experimentCount;
-				// JFrame experimentCountFrame = new JFrame("Скільки необхідно
-				// зробити експерементів?");
-				// experimentCount =
-				// DialogHelper.getIntegerValueDialog(experimentCountFrame,
-				// "Кількість експерементів:");
-				//
-				// Tour testTour = new
-				// Tour(GeneratorHelper.generateCities(citiesCount, 500, 500));
-				// Result averageGAResult = getAverageResult(AlgorithmType.GA,
-				// testTour, experimentCount);
-				// Result averageGreedyResult =
-				// getAverageResult(AlgorithmType.GREEDY, testTour,
-				// experimentCount);
-				// Result averageBranchBoundResult =
-				// getAverageResult(AlgorithmType.BRANCH_BOUND, testTour,
-				// experimentCount);
-				//
-				// System.out.println("GA час:" +
-				// averageGAResult.averageTimeSec);
-				// System.out.println("Greedy час:" +
-				// averageGreedyResult.averageTimeSec);
-				// System.out.println("BranchBound час:" +
-				// averageBranchBoundResult.averageTimeSec);
-				// AccuracyChart chart1 = new AccuracyChart("Графік № 1",
-				// "Точність (Кількість знаходжень оптимального рішення)",
-				// averageGAResult, averageGreedyResult,
-				// averageBranchBoundResult);
-				// TimeChart chart2 = new TimeChart("Графік № 2", "Час",
-				// averageGAResult, averageGreedyResult,
-				// averageBranchBoundResult);
-				//
-				// chart1.pack( );
-				// RefineryUtilities.centerFrameOnScreen( chart1 );
-				// chart1.setVisible( true );
-				//
-				// chart2.pack( );
-				// RefineryUtilities.centerFrameOnScreen( chart2 );
-				// chart2.setVisible( true );
 			}
 		});
 
@@ -216,7 +169,7 @@ public class GAMainWindow extends JFrame {
 						resultWindow = new ResultWindow(getOutputPanel(), getOutputLable());
 						resultWindow.setVisible(true);
 					}
-					
+
 					AlgorithmType selectedType = (AlgorithmType) cbAlgorithm.getSelectedItem();
 
 					algorithm = TSAlgorithmFactory.getTSAlgorithm(selectedType, getMainWindow());
@@ -225,10 +178,8 @@ public class GAMainWindow extends JFrame {
 
 				} else {
 					setCalculated(true);
-					if (runningAlgorythm != null) {
-						runningAlgorythm.stop();
-						algorithm.drawFinalResult();
-					}
+					algorithm.stopCalculation();
+					algorithm.drawFinalResult();
 				}
 			}
 		});
@@ -246,7 +197,7 @@ public class GAMainWindow extends JFrame {
 			btnCalculate.setBackground(Color.RED);
 		}
 	}
-	
+
 	public boolean isDrawingNeeded() {
 		return showDrawingChbx.isSelected();
 	}

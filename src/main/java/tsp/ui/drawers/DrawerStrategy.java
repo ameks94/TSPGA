@@ -1,4 +1,4 @@
-package tsp.ui;
+package tsp.ui.drawers;
 
 import java.awt.Graphics;
 import java.util.List;

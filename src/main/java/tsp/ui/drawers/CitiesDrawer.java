@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.util.List;
 
 import tsp.algorithms.City;
-import tsp.ui.DrawerStrategy;
 
 public class CitiesDrawer extends DrawerStrategy{
 

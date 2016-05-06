@@ -1,4 +1,4 @@
-package tsp.ui.forms;
+package tsp.ui;
 
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
@@ -12,9 +12,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import tsp.ui.CitiesPanel;
-import tsp.ui.DrawerFactory;
-import tsp.ui.DrawerFactory.DrawerType;
+import tsp.ui.drawers.DrawerFactory;
+import tsp.ui.drawers.DrawerFactory.DrawerType;
 import tsp.utils.CurrentResultForShowing;
 
 public class ResultWindow extends JFrame {
