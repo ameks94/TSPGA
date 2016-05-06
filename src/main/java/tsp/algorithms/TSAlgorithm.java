@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 
@@ -18,9 +19,9 @@ public abstract class TSAlgorithm implements Runnable {
 	protected List<City> cities;
 	protected double[][] distances;
 	protected int iterationCount = 1;
-	
+
 	protected boolean needCalculate = true;
-	
+
 	private CitiesPanel outputPanel;
 	private JLabel outputLabel;
 	private Tour currentResult;
@@ -28,10 +29,8 @@ public abstract class TSAlgorithm implements Runnable {
 	private double currDistance;
 	private GAMainWindow mainWindow;
 	private DefaultListModel iterationResultArea;
-	
-	private boolean needShowResult = false;
 
-	
+	private boolean needShowResult = false;
 
 	public TSAlgorithm(GAMainWindow mainWindow) {
 		this.mainWindow = mainWindow;
@@ -42,7 +41,7 @@ public abstract class TSAlgorithm implements Runnable {
 		this.needShowResult = mainWindow.isDrawingNeeded();
 		initializeDistances();
 	}
-	
+
 	protected void setResult(Tour currentResult) {
 		this.currentResult = currentResult;
 		this.currDistance = currentResult.getFitness();
@@ -50,7 +49,7 @@ public abstract class TSAlgorithm implements Runnable {
 			drawCurrentResult();
 		}
 	}
-	
+
 	public void stopCalculation() {
 		needCalculate = false;
 	}
@@ -61,11 +60,17 @@ public abstract class TSAlgorithm implements Runnable {
 		currResult.setTour(currentResult.copyTour());
 		currResult.setDistance(currDistance);
 		currResult.setIteration(iterationCount);
-		outputLabel.setText(String.valueOf(currResult.getDistance()));
-		outputPanel.setCurrentTour(currResult.getTour());
-		outputPanel.repaint();
-		logger.debug(currResult);
-		iterationResultArea.addElement(currResult);
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				outputLabel.setText(String.valueOf(currResult.getDistance()));
+				outputPanel.setCurrentTour(currResult.getTour());
+				outputPanel.repaint();
+				logger.debug(currResult);
+				iterationResultArea.addElement(currResult);
+			}
+		});
+
 		lastDistance = currDistance;
 	}
 
