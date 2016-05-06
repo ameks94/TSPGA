@@ -51,7 +51,6 @@ public class ResultWindow extends JFrame {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			CurrentResultForShowing selectedResult = (CurrentResultForShowing)listModel.get(list.getSelectedIndex());
-			outputPanel.clearAll();
 			outputPanel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.CitiesPath));
 			outputPanel.setCurrentTour(selectedResult.getTour());
 			outputLabel.setText(String.valueOf(selectedResult.getDistance()));
