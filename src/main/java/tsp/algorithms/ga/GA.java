@@ -11,11 +11,17 @@ import tsp.ui.GAMainWindow;
 public class GA extends TSAlgorithm {
 
 	/* GA parameters */
-	private static final double mutationRate = 0.03;
+	private static final double mutationRate = 0.1;
 	private static final int tournamentSize = 10;	
 	private static final boolean elitism = true;
 	private static final int populationCount = 100;
-	
+	// попробовать увеличить мутацию, когда 
+	// 1) максимум итераций... - максимальное кол итераций
+	// 2) максимальное кол. безрезультатных итераций... ... нужно чило итераций ввести...
+	// 3) ограничение на приемлемое улучшение.... тоесть если мы получаем прирост меньше заданого числа, то стоп
+	// 4) добавить другие критерии... в фитнес функцию 
+	// 5) показывать текущюю итерацию на UI постоянно
+	// population initialization via greedy algorithm... UI checkbox
 
 	public GA(GAMainWindow mainWindow) {
 		super(mainWindow);

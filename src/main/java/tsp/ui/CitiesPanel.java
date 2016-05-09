@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
@@ -37,6 +38,8 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 	
 //	private boolean imageWasDrawn = false;
 	private BufferedImage image;
+	
+	private GAMainWindow mainWindow;
 
 	public CitiesPanel() {
 		addMouseListener(this);
@@ -52,6 +55,10 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
         }
 	}
 
+	public void setMainWindow(GAMainWindow mainWindow) {
+		this.mainWindow = mainWindow;
+	}
+	
 	public void setCurrentTour(Tour currentTour) {
 		this.currentTour = currentTour.getCitiesPath();
 	}
@@ -66,10 +73,7 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-//		if (!imageWasDrawn) {
-			g.drawImage(image, 0,0,this.getWidth(),this.getHeight(),this);
-//			imageWasDrawn = true;
-//		}
+		g.drawImage(image, 0,0,this.getWidth(),this.getHeight(),this);
 		
 		if (currentTour == null) {
 			currentTour = new ArrayList<>(cities);
@@ -82,8 +86,9 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 	public void mousePressed(MouseEvent e) {
 		setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
 		cities.add(new City(e.getX(), e.getY(), cities.size()));
+		mainWindow.setCityCount(cities.size());
+		mainWindow.enableCalculation();
 		currentTour = null;
-		logger.debug(cities.size() + "  " + e.getPoint());
 		repaint();
 	}
 
@@ -91,6 +96,8 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 	public void clearAll() {
 		cities = new ArrayList<City>();
 		currentTour = null;
+		mainWindow.setCityCount(0);
+		mainWindow.disableCalculation();
 		repaint();
 	}
 
@@ -136,6 +143,7 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 
 	public void setCities(List<City> cities) {
 		this.cities = cities;
+		mainWindow.enableCalculation();
 		currentTour = null;
 	}
 

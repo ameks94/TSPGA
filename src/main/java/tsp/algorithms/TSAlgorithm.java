@@ -49,6 +49,8 @@ public abstract class TSAlgorithm implements Runnable {
 	protected void setResult(Tour currentResult) {
 		this.currentResult = currentResult;
 		this.currDistance = currentResult.getFitness();
+		mainWindow.setCurrentIteration(iterationCount);
+		outputLabel.setText(String.valueOf(currDistance));
 		if (currDistance != lastDistance) {
 			this.distancesAtIterations.put(iterationCount, currDistance);
 			if (needShowResult) {
@@ -74,7 +76,6 @@ public abstract class TSAlgorithm implements Runnable {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				outputLabel.setText(String.valueOf(currResult.getDistance()));
 				outputPanel.setCurrentTour(currResult.getTour());
 				outputPanel.repaint();
 				logger.debug(currResult);
