@@ -69,8 +69,9 @@ public class GAMainWindow extends JFrame {
 		panel.setBounds(10, 11, 657, 634);
 		contentPane.add(panel);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
-		panel.setBackground(Color.WHITE);
+//		panel.setBackground(Color.WHITE);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+//		panel.set
 
 		JLabel lblAlgorithm = new JLabel("Алгоритм");
 		lblAlgorithm.setBounds(711, 11, 81, 14);
@@ -186,6 +187,7 @@ public class GAMainWindow extends JFrame {
 		for (AlgorithmType alType : AlgorithmType.values()) {
 			cbAlgorithm.addItem(alType);
 		}
+		resultWindow = new ResultWindow(getOutputPanel(), getOutputLable());
 	}
 
 	public void setCalculated(boolean calculated) {

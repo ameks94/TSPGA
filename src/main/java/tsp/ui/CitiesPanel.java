@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,12 +34,22 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 	private List<City> currentTour;
 	/***/
 	private DrawerStrategy drawerStrategy;
+	
+//	private boolean imageWasDrawn = false;
+	private BufferedImage image;
 
 	public CitiesPanel() {
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		setBackground(Color.WHITE);
+//		setBackground(Color.WHITE);
 		setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
+		try
+        {
+            image = javax.imageio.ImageIO.read(this.getClass().getResource("/tsp/resources/osnovp_5v_Olya.jpg"));
+        }
+        catch (Exception e) { 
+        	logger.error(e);
+        }
 	}
 
 	public void setCurrentTour(Tour currentTour) {
@@ -54,10 +65,16 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		
+//		if (!imageWasDrawn) {
+			g.drawImage(image, 0,0,this.getWidth(),this.getHeight(),this);
+//			imageWasDrawn = true;
+//		}
+		
 		if (currentTour == null) {
 			currentTour = new ArrayList<>(cities);
 		}
-		g.setColor(Color.black);
+		g.setColor(Color.BLACK);
 		drawerStrategy.paintComponent(g, currentTour);
 	}
 

@@ -4,12 +4,14 @@ import java.util.List;
 
 import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
+import tsp.algorithms.TSAlgorithmFactory;
+import tsp.algorithms.TSAlgorithmFactory.AlgorithmType;
 import tsp.ui.GAMainWindow;
 
 public class GA extends TSAlgorithm {
 
 	/* GA parameters */
-	private static final double mutationRate = 0.1;
+	private static final double mutationRate = 0.03;
 	private static final int tournamentSize = 10;	
 	private static final boolean elitism = true;
 	private static final int populationCount = 100;
@@ -39,24 +41,30 @@ public class GA extends TSAlgorithm {
 		//TODO % улучшения значения для елиты
 		//TODO как только элита перестала повышать результат... даем мутацию...
 		// Keep our best individual if elitism is enabled
+
+//		long start = System.nanoTime();
 		int elitismOffset = 0;
 		if (elitism) {
 			newPopulation.saveTour(0, pop.getFittest());
 			elitismOffset = 1;
 		}
-
+//		System.out.println("Elit: " + (System.nanoTime() - start));
 		// Crossover population
 		// Loop over the new population's size and create individuals from
 		// Current population
+//		long start1 = System.nanoTime();
 		for (int i = elitismOffset; i < newPopulation.populationSize(); i++) {
 			// Select parents
 			Tour parent1 = tournamentSelection(pop);
 			Tour parent2 = tournamentSelection(pop);
+//			start = System.nanoTime();
 			// Crossover parents
 			Tour child = crossover(parent1, parent2);
+//			System.out.println("Crossover: " + (System.nanoTime() - start));
 			// Add child to new population
 			newPopulation.saveTour(i, child);
 		}
+//		System.out.println("Evolve: " + (System.nanoTime() - start1));
 
 		// Mutate the new population a bit to add some new genetic material
 		for (int i = elitismOffset; i < newPopulation.populationSize(); i++) {
@@ -112,7 +120,7 @@ public class GA extends TSAlgorithm {
 		// Loop through tour cities
 		for (int tourPos1 = 0; tourPos1 < tour.tourSize(); tourPos1++) {
 			// Apply mutation rate
-			if (Math.random() < mutationRate) {
+			if (Math.random() <= mutationRate) {
 				// Get a second random position in the tour
 				int tourPos2 = (int) (tour.tourSize() * Math.random());
 
@@ -155,6 +163,7 @@ public class GA extends TSAlgorithm {
 			tours = new Tour[populationSize];
 			// If we need to initialise a population of tours do so
 			if (initialise) {
+				
 				// Loop and create individuals
 				for (int i = 0; i < populationSize(); i++) {
 					Tour newTour = new Tour(cities.size());

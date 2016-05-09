@@ -26,7 +26,7 @@ public class GreedyAlgorithm extends TSAlgorithm{
 		setResult(new Tour(optCities));
 		drawFinalResult();
 	}
-
+	
 	private int visitedSum = 0;
 	private int distance = 0;
 	private List<City> optCities = new ArrayList<City>();
@@ -39,16 +39,16 @@ public class GreedyAlgorithm extends TSAlgorithm{
 		optCities.add(currCity);
 		if(visitedSum > cities.size() - 1) //если посетили все города
 		{
-			distance += currCity.distanceTo(cities.get(0)); //прибавить путь к начальному городу, а потом выйти с функции
+			distance += distances[currCity.getId()][cities.get(0).getId()]; //прибавить путь к начальному городу, а потом выйти с функции
 		}
 		else //если не все города посетили
 		{
 			for(short i = 0; i < cities.size(); i++) {
 				City cityAtCurrPos = cities.get(i);
-				if(currCity.distanceTo(cityAtCurrPos) < min && !cityAtCurrPos.isVisited() && currCity.distanceTo(cityAtCurrPos) != 0) //если путь к и-тому городу ближе чем минимум и этот город не посещен
+				if(distances[currCity.getId()][cityAtCurrPos.getId()] < min && !cityAtCurrPos.isVisited() && distances[currCity.getId()][cityAtCurrPos.getId()] != 0) //если путь к и-тому городу ближе чем минимум и этот город не посещен
 				{
 					nextCity = cityAtCurrPos; //назначить следующий город для посещения
-					min = (int) currCity.distanceTo(nextCity); //назначить новый минимум
+					min = (int) distances[currCity.getId()][nextCity.getId()]; //назначить новый минимум
 				}
 			}
 			//			cout<<" "<< gorod+1<<"-"<<next+1<<" "; // пройденный маршрут

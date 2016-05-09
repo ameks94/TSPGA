@@ -127,14 +127,6 @@ public abstract class TSAlgorithm implements Runnable {
 			this.tourCities = tour;
 		}
 
-		public void addCityToEnd(City city) {
-			this.tourCities.add(city);
-			// If the tours been altered we need to reset the fitness and
-			// distance
-			fitness = 0;
-			distance = 0;
-		}
-
 		public List<City> getCitiesPath() {
 			return tourCities;
 		}
@@ -173,26 +165,6 @@ public abstract class TSAlgorithm implements Runnable {
 
 		// Gets the total distance of the tour
 		public int getDistance() {
-			// if (distance == 0) {
-			// int tourDistance = 0;
-			// // Loop through our tour's cities
-			// for (int cityIndex = 0; cityIndex < tourSize(); cityIndex++) {
-			// // Get city we're travelling from
-			// City fromCity = getCity(cityIndex);
-			// // City we're travelling to
-			// City destinationCity;
-			// // Check we're not on our tour's last city, if we are set our
-			// // tour's final destination city to our starting city
-			// if (cityIndex + 1 < tourSize()) {
-			// destinationCity = getCity(cityIndex + 1);
-			// } else {
-			// destinationCity = getCity(0);
-			// }
-			// // Get the distance between the two cities
-			// tourDistance += fromCity.distanceTo(destinationCity);
-			// }
-			// distance = tourDistance;
-			// }
 			if (distance == 0) {
 				for (int i = 0; i < tourSize() - 1; i++) {
 					distance += distances[getCity(i).id][getCity(i + 1).id];
