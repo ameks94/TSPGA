@@ -33,6 +33,7 @@ import javax.swing.DropMode;
 import javax.swing.JSplitPane;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
+import javax.swing.JTextField;
 
 public class GAMainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -51,6 +52,7 @@ public class GAMainWindow extends JFrame {
 	private Thread runningAlgorythm;
 	private TSAlgorithm algorithm;
 	private JCheckBox showDrawingChbx;
+	private JTextField citiesCountTf;
 
 	/**
 	 * Create the frame.
@@ -83,43 +85,43 @@ public class GAMainWindow extends JFrame {
 		contentPane.add(cbAlgorithm);
 
 		btnCalculate = new JButton(startCalculationText);
-		btnCalculate.setBounds(677, 107, 150, 23);
+		btnCalculate.setBounds(677, 156, 150, 23);
 		contentPane.add(btnCalculate);
 		btnCalculate.setBackground(Color.GREEN);
 
 		JButton btnClear = new JButton("Очистити");
-		btnClear.setBounds(677, 175, 150, 23);
+		btnClear.setBounds(677, 190, 150, 23);
 		contentPane.add(btnClear);
 
 		JButton btnGenerate = new JButton("Генерувати");
-		btnGenerate.setBounds(677, 141, 150, 23);
+		btnGenerate.setBounds(677, 122, 150, 23);
 		contentPane.add(btnGenerate);
 
 		JButton btnTestchart = new JButton("Тестувати");
-		btnTestchart.setBounds(677, 209, 150, 23);
+		btnTestchart.setBounds(677, 223, 150, 23);
 		contentPane.add(btnTestchart);
 
 		JLabel labelConstOptTour = new JLabel("Найкоротший шлях:");
-		labelConstOptTour.setBounds(687, 243, 115, 14);
+		labelConstOptTour.setBounds(698, 541, 115, 14);
 		contentPane.add(labelConstOptTour);
 
 		lblOptimalTour = new JLabel("");
-		lblOptimalTour.setBounds(698, 268, 83, 23);
+		lblOptimalTour.setBounds(709, 566, 83, 23);
 		contentPane.add(lblOptimalTour);
 		lblOptimalTour.setForeground(Color.GREEN);
 		lblOptimalTour.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
 		showDrawingChbx = new JCheckBox("Показати результати");
 		showDrawingChbx.setSelected(true);
-		showDrawingChbx.setBounds(676, 75, 151, 23);
+		showDrawingChbx.setBounds(676, 64, 151, 23);
 		contentPane.add(showDrawingChbx);
 
 		JLabel lblNewLabel = new JLabel("Кількість міст:");
-		lblNewLabel.setBounds(687, 302, 103, 14);
+		lblNewLabel.setBounds(698, 600, 103, 14);
 		contentPane.add(lblNewLabel);
 
 		JLabel citiesCountLbl = new JLabel("0");
-		citiesCountLbl.setBounds(722, 327, 46, 14);
+		citiesCountLbl.setBounds(733, 625, 46, 14);
 		contentPane.add(citiesCountLbl);
 		btnTestchart.addActionListener(new ActionListener() {
 			@Override
@@ -130,8 +132,8 @@ public class GAMainWindow extends JFrame {
 		btnGenerate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFrame frame = new JFrame("Кількість міст?");
-				int citiesCount = DialogHelper.getIntegerValueDialog(frame, "Кількість міст для генерації:");
+//				JFrame frame = new JFrame("Кількість міст?");
+				int citiesCount = Integer.valueOf(citiesCountTf.getText());
 				if (citiesCount == 0) {
 					return;
 				}
@@ -168,6 +170,7 @@ public class GAMainWindow extends JFrame {
 							resultWindow.hide();
 						}
 						resultWindow = new ResultWindow(getOutputPanel(), getOutputLable());
+						resultWindow.setLocation(850, 0);
 						resultWindow.setVisible(true);
 					}
 
@@ -188,6 +191,15 @@ public class GAMainWindow extends JFrame {
 			cbAlgorithm.addItem(alType);
 		}
 		resultWindow = new ResultWindow(getOutputPanel(), getOutputLable());
+		
+		JLabel label = new JLabel("Кількість міст:");
+		label.setBounds(677, 97, 93, 14);
+		contentPane.add(label);
+		
+		citiesCountTf = new JTextField();
+		citiesCountTf.setBounds(767, 94, 46, 20);
+		contentPane.add(citiesCountTf);
+		citiesCountTf.setColumns(10);
 	}
 
 	public void setCalculated(boolean calculated) {
