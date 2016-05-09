@@ -18,10 +18,13 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import org.jfree.ui.RefineryUtilities;
+
 import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
 import tsp.algorithms.TSAlgorithmFactory;
 import tsp.algorithms.TSAlgorithmFactory.AlgorithmType;
+import tsp.ui.charts.TourChart;
 import tsp.ui.drawers.DrawerFactory;
 import tsp.ui.drawers.DrawerFactory.DrawerType;
 import tsp.utils.DialogHelper;
@@ -60,7 +63,7 @@ public class GAMainWindow extends JFrame {
 	public GAMainWindow() {
 		super("GA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 852, 688);
+		setBounds(100, 100, 848, 688);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -97,16 +100,16 @@ public class GAMainWindow extends JFrame {
 		btnGenerate.setBounds(677, 122, 150, 23);
 		contentPane.add(btnGenerate);
 
-		JButton btnTestchart = new JButton("Тестувати");
+		JButton btnTestchart = new JButton("Графік результатів");
 		btnTestchart.setBounds(677, 223, 150, 23);
 		contentPane.add(btnTestchart);
 
 		JLabel labelConstOptTour = new JLabel("Найкоротший шлях:");
-		labelConstOptTour.setBounds(698, 541, 115, 14);
+		labelConstOptTour.setBounds(677, 541, 115, 14);
 		contentPane.add(labelConstOptTour);
 
 		lblOptimalTour = new JLabel("");
-		lblOptimalTour.setBounds(709, 566, 83, 23);
+		lblOptimalTour.setBounds(688, 566, 83, 23);
 		contentPane.add(lblOptimalTour);
 		lblOptimalTour.setForeground(Color.GREEN);
 		lblOptimalTour.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -117,15 +120,19 @@ public class GAMainWindow extends JFrame {
 		contentPane.add(showDrawingChbx);
 
 		JLabel lblNewLabel = new JLabel("Кількість міст:");
-		lblNewLabel.setBounds(698, 600, 103, 14);
+		lblNewLabel.setBounds(677, 600, 103, 14);
 		contentPane.add(lblNewLabel);
 
 		JLabel citiesCountLbl = new JLabel("0");
-		citiesCountLbl.setBounds(733, 625, 46, 14);
+		citiesCountLbl.setBounds(712, 625, 46, 14);
 		contentPane.add(citiesCountLbl);
 		btnTestchart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				final TourChart demo = new TourChart("Мінімальний шлях по ітераціям", algorithm.getIterationDistances());
+		        demo.pack();
+		        RefineryUtilities.centerFrameOnScreen(demo);
+		        demo.setVisible(true);
 			}
 		});
 
@@ -200,6 +207,7 @@ public class GAMainWindow extends JFrame {
 		citiesCountTf.setBounds(767, 94, 46, 20);
 		contentPane.add(citiesCountTf);
 		citiesCountTf.setColumns(10);
+		citiesCountTf.setText("20");
 	}
 
 	public void setCalculated(boolean calculated) {

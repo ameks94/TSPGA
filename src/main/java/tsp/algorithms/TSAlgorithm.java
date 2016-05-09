@@ -2,7 +2,9 @@ package tsp.algorithms;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
@@ -27,6 +29,7 @@ public abstract class TSAlgorithm implements Runnable {
 	private Tour currentResult;
 	private double lastDistance;
 	private double currDistance;
+	private Map<Integer, Double> distancesAtIterations;
 	private GAMainWindow mainWindow;
 	private DefaultListModel iterationResultArea;
 
@@ -39,19 +42,27 @@ public abstract class TSAlgorithm implements Runnable {
 		this.outputLabel = mainWindow.getOutputLable();
 		this.iterationResultArea = mainWindow.getTextArea();
 		this.needShowResult = mainWindow.isDrawingNeeded();
+		this.distancesAtIterations = new HashMap<>();
 		initializeDistances();
 	}
 
 	protected void setResult(Tour currentResult) {
 		this.currentResult = currentResult;
 		this.currDistance = currentResult.getFitness();
-		if (needShowResult && currDistance != lastDistance) {
-			drawCurrentResult();
+		if (currDistance != lastDistance) {
+			this.distancesAtIterations.put(iterationCount, currDistance);
+			if (needShowResult) {
+				drawCurrentResult();
+			}
 		}
 	}
 
 	public void stopCalculation() {
 		needCalculate = false;
+	}
+	
+	public Map<Integer, Double> getIterationDistances() {
+		return distancesAtIterations;
 	}
 
 	// for GA

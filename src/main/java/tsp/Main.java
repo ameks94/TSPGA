@@ -14,6 +14,7 @@ public class Main {
 			public void run() {
 				try {
 					GAMainWindow frame = new GAMainWindow();
+					frame.setLocation(0, 0);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
