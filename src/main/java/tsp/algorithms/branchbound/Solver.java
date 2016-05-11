@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import tsp.algorithms.City;
+import tsp.algorithms.InitialData;
 import tsp.algorithms.TSAlgorithm;
 import tsp.ui.GAMainWindow;
 

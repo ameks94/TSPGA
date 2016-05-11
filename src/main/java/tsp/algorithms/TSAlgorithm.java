@@ -21,7 +21,6 @@ public abstract class TSAlgorithm implements Runnable {
 	protected List<City> cities;
 	protected double[][] distances;
 	protected int iterationCount = 1;
-
 	protected boolean needCalculate = true;
 
 	private CitiesPanel outputPanel;

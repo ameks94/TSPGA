@@ -3,6 +3,7 @@ package tsp.algorithms.ga;
 import java.util.List;
 
 import tsp.algorithms.City;
+import tsp.algorithms.InitialData;
 import tsp.algorithms.TSAlgorithm;
 import tsp.algorithms.TSAlgorithmFactory;
 import tsp.algorithms.TSAlgorithmFactory.AlgorithmType;
@@ -11,16 +12,18 @@ import tsp.ui.GAMainWindow;
 public class GA extends TSAlgorithm {
 
 	/* GA parameters */
-	private static final double mutationRate = 0.1;
-	private static final int tournamentSize = 10;	
-	private static final boolean elitism = true;
-	private static final int populationCount = 100;
+	private final double mutationRate = InitialData.mutationRate;
+	private final int tournamentSize = InitialData.tournamentSize;	
+	private final boolean elitism = true;
+	private final int populationCount = InitialData.populationCount;
+	
 	// попробовать увеличить мутацию, когда 
 	// 1) максимум итераций... - максимальное кол итераций
-	// 2) максимальное кол. безрезультатных итераций... ... нужно чило итераций ввести...
+	// 2) максимальное кол. безрезультатных итераций... ... нужно число итераций ввести...
 	// 3) ограничение на приемлемое улучшение.... тоесть если мы получаем прирост меньше заданого числа, то стоп
 	// 4) добавить другие критерии... в фитнес функцию 
-	// 5) показывать текущюю итерацию на UI постоянно
+	// + 5) показывать текущюю итерацию на UI постоянно
+	// 6) обавить вівод расстояний между городами... на каждой итерации
 	// population initialization via greedy algorithm... UI checkbox
 
 	public GA(GAMainWindow mainWindow) {
