@@ -6,6 +6,7 @@ import java.util.List;
 import tsp.algorithms.City;
 import tsp.algorithms.InitialData;
 import tsp.algorithms.TSAlgorithm;
+import tsp.algorithms.ga.GA.Population;
 import tsp.ui.GAMainWindow;
 
 public class GreedyAlgorithm extends TSAlgorithm{
@@ -21,9 +22,17 @@ public class GreedyAlgorithm extends TSAlgorithm{
 //
 //	}
 	
-	public Tour calculate() {
-		processCity(cities.get(0));
-		return new Tour(optCities);
+	/**@param toursCount - not more then cities.size()*/
+	public List<Tour> generateTours(int toursCount) {
+		List<Tour> tours = new ArrayList<>();
+		for (int i = 0; i < toursCount; i++) {
+			visitedSum = 0;
+			distance = 0;
+			optCities = new ArrayList<City>();
+			processCity(cities.get(i));
+			tours.add(new Tour(optCities));
+		}
+		return tours;
 	}
 	
 	@Override

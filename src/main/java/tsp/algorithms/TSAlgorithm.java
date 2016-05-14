@@ -23,12 +23,13 @@ public abstract class TSAlgorithm implements Runnable {
 	protected int iterationCount = 1;
 	protected boolean needCalculate = true;
 	protected GAMainWindow mainWindow;
+	protected double currDistance;
+	protected double lastDistance;
+	protected int iterWithLastImprooving;
 
 	private CitiesPanel outputPanel;
 	private JLabel outputLabel;
-	private Tour currentResult;
-	private double lastDistance;
-	private double currDistance;
+	private Tour currentResult;	
 	private Map<Integer, Double> distancesAtIterations;
 	private DefaultListModel iterationResultArea;
 
@@ -51,10 +52,12 @@ public abstract class TSAlgorithm implements Runnable {
 		mainWindow.setCurrentIteration(iterationCount);
 		outputLabel.setText(String.valueOf(currDistance));
 		if (currDistance != lastDistance) {
+			iterWithLastImprooving = iterationCount;
 			this.distancesAtIterations.put(iterationCount, currDistance);
 			if (needShowResult) {
 				drawCurrentResult();
 			}
+			lastDistance = currDistance;
 		}
 	}
 
@@ -82,7 +85,6 @@ public abstract class TSAlgorithm implements Runnable {
 			}
 		});
 
-		lastDistance = currDistance;
 	}
 
 	// for algorithms that can finish calculation

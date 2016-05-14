@@ -40,6 +40,8 @@ public class GAMainWindow extends JFrame {
 	private JComboBox<AlgorithmType> cbAlgorithm;
 	private JLabel lblOptimalTour;
 	private JButton btnCalculate;
+	private JButton btnClear;
+	private JButton btnGenerate;
 
 	private ResultWindow resultWindow;
 	// private TextArea logArea;
@@ -96,11 +98,11 @@ public class GAMainWindow extends JFrame {
 		contentPane.add(btnCalculate);
 		btnCalculate.setBackground(Color.GREEN);
 
-		JButton btnClear = new JButton("Очистити");
+		btnClear = new JButton("Очистити");
 		btnClear.setBounds(677, 369, 247, 23);
 		contentPane.add(btnClear);
 
-		JButton btnGenerate = new JButton("Генерувати");
+		btnGenerate = new JButton("Генерувати");
 		btnGenerate.setBounds(677, 301, 247, 23);
 		contentPane.add(btnGenerate);
 
@@ -168,7 +170,7 @@ public class GAMainWindow extends JFrame {
 						return;
 					setCalculated(false);
 					panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.CitiesPath));
-
+					
 					if (isDrawingNeeded()) {
 						if (resultWindow != null && resultWindow.isShowing()) {
 							resultWindow.hide();
@@ -184,15 +186,12 @@ public class GAMainWindow extends JFrame {
 					algorithm = TSAlgorithmFactory.getTSAlgorithm(selectedType, getMainWindow());
 					runningAlgorythm = new Thread(algorithm);
 					runningAlgorythm.start();
-					btnClear.setEnabled(false);
-					btnGenerate.setEnabled(false);
 
 				} else {
 					setCalculated(true);
 					algorithm.stopCalculation();
 					algorithm.drawFinalResult();
-					btnClear.setEnabled(true);
-					btnGenerate.setEnabled(true);
+					
 				}
 			}
 		});
@@ -365,9 +364,13 @@ public class GAMainWindow extends JFrame {
 		if (calculated) {
 			btnCalculate.setText(startCalculationText);
 			btnCalculate.setBackground(Color.GREEN);
+			btnClear.setEnabled(true);
+			btnGenerate.setEnabled(true);
 		} else {
 			btnCalculate.setText(stopCalculationText);
 			btnCalculate.setBackground(Color.RED);
+			btnClear.setEnabled(false);
+			btnGenerate.setEnabled(false);
 		}
 	}
 	
