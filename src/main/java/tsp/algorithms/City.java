@@ -1,6 +1,13 @@
 package tsp.algorithms;
 
-public class City {
+import java.io.Serializable;
+
+public class City implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	int id;
 	int x;
 	int y;

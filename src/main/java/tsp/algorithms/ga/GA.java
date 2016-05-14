@@ -43,19 +43,13 @@ public class GA extends TSAlgorithm {
 				for (int i = 0; i < greedyTours.size(); i++) {
 					pop.saveTour(i, greedyTours.get(i));
 				}
-				for (int i = greedyTours.size(); i < populationCount; i++) {
-					Tour newTour = new Tour(cities.size());
-					newTour.generateIndividual(cities);
-					pop.saveTour(i, newTour);
-				}
 			} else {
 				greedyTours = new GreedyAlgorithm(mainWindow).generateTours(populationCount);
 				for (int i = 0; i < greedyTours.size(); i++) {
 					pop.saveTour(i, greedyTours.get(i));
 				}
 			}
-		} 
-		double prevDistance = 0;
+		}
 		while (needCalculate && iterationCount <= maxIterationCount && iterationCount - iterWithLastImprooving <= maxIterationCountWithoutImproving) {
 			pop = evolvePopulation(pop);
 			setResult(pop.getFittest());

@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tsp.algorithms.City;
-import tsp.algorithms.InitialData;
 import tsp.algorithms.TSAlgorithm;
-import tsp.algorithms.ga.GA.Population;
 import tsp.ui.GAMainWindow;
 
 public class GreedyAlgorithm extends TSAlgorithm{
+	private int visitedSum = 0;
+	private int distance = 0;
+	private List<City> optCities = new ArrayList<City>();
+	
 	public GreedyAlgorithm(GAMainWindow mainWindow) {
 		super(mainWindow);
 	}
@@ -42,9 +44,6 @@ public class GreedyAlgorithm extends TSAlgorithm{
 		drawFinalResult();
 	}
 	
-	private int visitedSum = 0;
-	private int distance = 0;
-	private List<City> optCities = new ArrayList<City>();
 	private void processCity(City currCity)
 	{
 		int min=9999;

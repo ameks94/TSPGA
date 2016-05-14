@@ -115,8 +115,6 @@ public abstract class TSAlgorithm implements Runnable {
 				distances[j][i] = distances[i][j];// копируем элементы верхней
 			}
 		}
-
-		this.lastDistance = new Tour(cities).getDistance();
 	}
 
 	public class Tour {

@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -11,15 +14,21 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.apache.log4j.Logger;
 import org.jfree.ui.RefineryUtilities;
 
 import tsp.algorithms.City;
@@ -31,10 +40,14 @@ import tsp.ui.charts.TourChart;
 import tsp.ui.drawers.DrawerFactory;
 import tsp.ui.drawers.DrawerFactory.DrawerType;
 import tsp.utils.GeneratorHelper;
+import tsp.utils.SerializationHelper;
+import javax.swing.border.TitledBorder;
+import javax.swing.UIManager;
 
 public class GAMainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
+	private final Logger log = Logger.getLogger(getClass().getName());
 	private JPanel contentPane;
 	private CitiesPanel panel;
 	private JComboBox<AlgorithmType> cbAlgorithm;
@@ -61,13 +74,16 @@ public class GAMainWindow extends JFrame {
 	private JTextField tournamentSizeTf;
 	private JCheckBox greedyInitializationChb;
 
+	private static final String defDirForData = "inputFiles/.";
+	private JTextField textField;
+
 	/**
 	 * Create the frame.
 	 */
 	public GAMainWindow() {
 		super("GA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 950, 688);
+		setBounds(100, 100, 957, 688);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -76,92 +92,146 @@ public class GAMainWindow extends JFrame {
 		// Panel for drawing
 		panel = new CitiesPanel();
 		panel.setMainWindow(this);
-		panel.setBounds(10, 11, 657, 634);
+		panel.setBounds(10, 25, 657, 620);
 		contentPane.add(panel);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 //		panel.setBackground(Color.WHITE);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "\u041D\u0410\u041B\u0410\u0428\u0422\u0423\u0412\u0410\u041D\u041D\u042F \u0410\u041B\u0413\u041E\u0420\u0418\u0422\u041C\u0423", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_2.setBounds(677, 21, 270, 179);
+		contentPane.add(panel_2);
+		panel_2.setLayout(null);
 //		panel.set
 
 		JLabel lblAlgorithm = new JLabel("Алгоритм");
-		lblAlgorithm.setBounds(677, 48, 83, 14);
-		contentPane.add(lblAlgorithm);
+		lblAlgorithm.setBounds(10, 19, 83, 14);
+		panel_2.add(lblAlgorithm);
 		lblAlgorithm.setHorizontalAlignment(SwingConstants.LEFT);
 
 		cbAlgorithm = new JComboBox<AlgorithmType>();
-		cbAlgorithm.setBounds(793, 45, 131, 21);
-		contentPane.add(cbAlgorithm);
+		cbAlgorithm.setBounds(126, 16, 131, 21);
+		panel_2.add(cbAlgorithm);
+		
+				showDrawingChbx = new JCheckBox("Показати результати");
+				showDrawingChbx.setBounds(6, 149, 151, 23);
+				panel_2.add(showDrawingChbx);
+				showDrawingChbx.setHorizontalAlignment(SwingConstants.LEFT);
+				showDrawingChbx.setSelected(true);
+				
+				JLabel label_5 = new JLabel("Вірогідність мутації:");
+				label_5.setBounds(10, 48, 132, 14);
+				panel_2.add(label_5);
+				label_5.setHorizontalAlignment(SwingConstants.LEFT);
+				
+				mutationRateTf = new JTextField();
+				mutationRateTf.setBounds(152, 43, 46, 20);
+				panel_2.add(mutationRateTf);
+				mutationRateTf.setText(String.valueOf(InitialData.mutationRate));
+				mutationRateTf.setColumns(10);
+				
+				populationCountTf = new JTextField();
+				populationCountTf.setBounds(152, 97, 46, 20);
+				panel_2.add(populationCountTf);
+				populationCountTf.setText(String.valueOf(InitialData.populationCount));
+				populationCountTf.setColumns(10);
+				
+				JLabel label_7 = new JLabel("Розмір популяції:");
+				label_7.setBounds(10, 100, 132, 14);
+				panel_2.add(label_7);
+				label_7.setHorizontalAlignment(SwingConstants.LEFT);
+				
+				tournamentSizeTf = new JTextField();
+				tournamentSizeTf.setBounds(152, 70, 46, 20);
+				panel_2.add(tournamentSizeTf);
+				tournamentSizeTf.setText(String.valueOf(InitialData.tournamentSize));
+				tournamentSizeTf.setColumns(10);
+				
+				JLabel label_6 = new JLabel("Розмір турніру:");
+				label_6.setBounds(10, 73, 132, 14);
+				panel_2.add(label_6);
+				label_6.setHorizontalAlignment(SwingConstants.LEFT);
+				
+				JLabel label_8 = new JLabel("%");
+				label_8.setBounds(202, 43, 55, 19);
+				panel_2.add(label_8);
+				
+				greedyInitializationChb = new JCheckBox("Ініціалізація жадібним алгоритмом");
+				greedyInitializationChb.setBounds(6, 123, 251, 23);
+				panel_2.add(greedyInitializationChb);
+				greedyInitializationChb.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "\u041A\u0415\u0420\u0423\u0412\u0410\u041D\u041D\u042F", TitledBorder.LEFT, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_1.setBounds(677, 201, 270, 186);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
 
 		btnCalculate = new JButton(startCalculationText);
-		btnCalculate.setBounds(677, 335, 247, 23);
+		btnCalculate.setBounds(10, 87, 247, 23);
+		panel_1.add(btnCalculate);
 		btnCalculate.setEnabled(false);
-		contentPane.add(btnCalculate);
 		btnCalculate.setBackground(Color.GREEN);
-
-		btnClear = new JButton("Очистити");
-		btnClear.setBounds(677, 369, 247, 23);
-		contentPane.add(btnClear);
-
-		btnGenerate = new JButton("Генерувати");
-		btnGenerate.setBounds(677, 301, 247, 23);
-		contentPane.add(btnGenerate);
-
-		JButton btnTestchart = new JButton("Графік результатів");
-		btnTestchart.setBounds(677, 403, 247, 23);
-		contentPane.add(btnTestchart);
-
-		JLabel labelConstOptTour = new JLabel("Найкоротший шлях:");
-		labelConstOptTour.setHorizontalAlignment(SwingConstants.LEFT);
-		labelConstOptTour.setBounds(677, 598, 115, 14);
-		contentPane.add(labelConstOptTour);
-
-		lblOptimalTour = new JLabel("");
-		lblOptimalTour.setBounds(828, 591, 83, 21);
-		contentPane.add(lblOptimalTour);
-		lblOptimalTour.setForeground(Color.GREEN);
-		lblOptimalTour.setFont(new Font("Tahoma", Font.PLAIN, 16));
-
-		showDrawingChbx = new JCheckBox("Показати результати");
-		showDrawingChbx.setHorizontalAlignment(SwingConstants.LEFT);
-		showDrawingChbx.setSelected(true);
-		showDrawingChbx.setBounds(673, 194, 151, 23);
-		contentPane.add(showDrawingChbx);
-		btnTestchart.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				final TourChart demo = new TourChart("Мінімальний шлях по ітераціям", algorithm.getIterationDistances());
-		        demo.pack();
-		        RefineryUtilities.centerFrameOnScreen(demo);
-		        demo.setVisible(true);
-			}
-		});
-
-		btnGenerate.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-//				JFrame frame = new JFrame("Кількість міст?");
-				int citiesCount = Integer.valueOf(citiesCountTf.getText());
-				if (citiesCount == 0) {
-					return;
-				}
-				List<City> cities = GeneratorHelper.generateCities(citiesCount, panel.getWidth() - 10,
-						panel.getHeight() - 10);
-				panel.setCities(cities);
-				panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
-				panel.repaint();
-			}
-		});
-		btnClear.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				panel.clearAll();
-				panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
-				if (resultWindow != null && resultWindow.isShowing()) {
-					resultWindow.hide();
-				}
-				panel.repaint();
-			}
-		});
+		
+				btnClear = new JButton("Очистити");
+				btnClear.setBounds(10, 121, 247, 23);
+				panel_1.add(btnClear);
+				
+						btnGenerate = new JButton("Генерувати");
+						btnGenerate.setBounds(10, 53, 247, 23);
+						panel_1.add(btnGenerate);
+						
+								JButton btnTestchart = new JButton("Графік результатів");
+								btnTestchart.setBounds(10, 155, 247, 23);
+								panel_1.add(btnTestchart);
+								
+								JLabel label = new JLabel("Кількість міст:");
+								label.setBounds(10, 28, 115, 14);
+								panel_1.add(label);
+								label.setHorizontalAlignment(SwingConstants.LEFT);
+								
+								citiesCountTf = new JTextField();
+								citiesCountTf.setBounds(112, 25, 46, 20);
+								panel_1.add(citiesCountTf);
+								citiesCountTf.setColumns(10);
+								citiesCountTf.setText("20");
+								btnTestchart.addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent arg0) {
+										final TourChart demo = new TourChart("Мінімальний шлях по ітераціям", algorithm.getIterationDistances());
+								        demo.pack();
+								        RefineryUtilities.centerFrameOnScreen(demo);
+								        demo.setVisible(true);
+									}
+								});
+						
+								btnGenerate.addActionListener(new ActionListener() {
+									@Override
+									public void actionPerformed(ActionEvent e) {
+						//				JFrame frame = new JFrame("Кількість міст?");
+										int citiesCount = Integer.valueOf(citiesCountTf.getText());
+										if (citiesCount == 0) {
+											return;
+										}
+										List<City> cities = GeneratorHelper.generateCities(citiesCount, panel.getWidth() - 10,
+												panel.getHeight() - 10);
+										setCities(cities);
+									}
+								});
+				btnClear.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						currentIterationTf.setText("0");
+						lblOptimalTour.setText("0");
+						panel.clearAll();
+						panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
+						if (resultWindow != null && resultWindow.isShowing()) {
+							resultWindow.hide();
+						}
+						panel.repaint();
+					}
+				});
 		btnCalculate.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -195,152 +265,144 @@ public class GAMainWindow extends JFrame {
 				}
 			}
 		});
+		
+		JPanel panel_4 = new JPanel();
+		panel_4.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "\u0420\u0415\u0417\u0423\u041B\u042C\u0422\u0410\u0422\u0418", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_4.setBounds(677, 493, 270, 152);
+		contentPane.add(panel_4);
+		panel_4.setLayout(null);
+
+		JLabel labelConstOptTour = new JLabel("Найкоротший шлях:");
+		labelConstOptTour.setBounds(6, 23, 115, 14);
+		panel_4.add(labelConstOptTour);
+		labelConstOptTour.setHorizontalAlignment(SwingConstants.LEFT);
+
+		lblOptimalTour = new JLabel("");
+		lblOptimalTour.setBounds(152, 16, 83, 21);
+		panel_4.add(lblOptimalTour);
+		lblOptimalTour.setForeground(Color.GREEN);
+		lblOptimalTour.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		resultWindow = new ResultWindow(getOutputPanel(), getOutputLable());
+		
+		JLabel label_4 = new JLabel("Поточна ітерація:");
+		label_4.setBounds(6, 48, 115, 14);
+		panel_4.add(label_4);
+		label_4.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		currentIterationTf = new JTextField();
+		currentIterationTf.setBounds(128, 45, 132, 20);
+		panel_4.add(currentIterationTf);
+		currentIterationTf.setEditable(false);
+		currentIterationTf.setColumns(10);
+		
+		JLabel lblNewLabel = new JLabel("Час роботи:");
+		lblNewLabel.setBounds(6, 73, 115, 14);
+		panel_4.add(lblNewLabel);
+		
+		textField = new JTextField();
+		textField.setEditable(false);
+		textField.setBounds(128, 70, 132, 20);
+		panel_4.add(textField);
+		textField.setColumns(10);
 		for (AlgorithmType alType : AlgorithmType.values()) {
 			cbAlgorithm.addItem(alType);
 		}
-		resultWindow = new ResultWindow(getOutputPanel(), getOutputLable());
 		
-		JLabel label = new JLabel("Кількість міст:");
-		label.setHorizontalAlignment(SwingConstants.LEFT);
-		label.setBounds(702, 273, 115, 14);
-		contentPane.add(label);
-		
-		citiesCountTf = new JTextField();
-		citiesCountTf.setBounds(844, 270, 46, 20);
-		contentPane.add(citiesCountTf);
-		citiesCountTf.setColumns(10);
-		citiesCountTf.setText("20");
+		JPanel panel_3 = new JPanel();
+		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "\u041A\u0420\u0418\u0422\u0415\u0420\u0406\u0407 \u0417\u0423\u041F\u0418\u041D\u0423", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panel_3.setBounds(677, 393, 270, 99);
+		contentPane.add(panel_3);
+		panel_3.setLayout(null);
 		
 		JLabel lblMax_1 = new JLabel("Max. кількість ітерацій");
+		lblMax_1.setBounds(6, 19, 150, 14);
+		panel_3.add(lblMax_1);
 		lblMax_1.setHorizontalAlignment(SwingConstants.LEFT);
-		lblMax_1.setBounds(677, 473, 150, 14);
-		contentPane.add(lblMax_1);
 		
 		maxIterationCountTf = new JTextField();
+		maxIterationCountTf.setBounds(207, 16, 46, 20);
+		panel_3.add(maxIterationCountTf);
 		maxIterationCountTf.setText(String.valueOf(InitialData.maxIterationCount));
-		maxIterationCountTf.setBounds(878, 470, 46, 20);
-		contentPane.add(maxIterationCountTf);
 		maxIterationCountTf.setColumns(10);
 		
 		JLabel lblMax = new JLabel("Max. ітерацій без покращення");
+		lblMax.setBounds(6, 47, 197, 14);
+		panel_3.add(lblMax);
 		lblMax.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMax.setToolTipText("Максимальна кількість ітерацій без покращення результату");
-		lblMax.setBounds(677, 501, 197, 14);
-		contentPane.add(lblMax);
 		
 		maxAffectIterationCountTf = new JTextField();
+		maxAffectIterationCountTf.setBounds(207, 44, 46, 20);
+		panel_3.add(maxAffectIterationCountTf);
 		maxAffectIterationCountTf.setText(String.valueOf(InitialData.maxIterationCountWithoutImproving));
 		maxAffectIterationCountTf.setToolTipText("Максимальна кількість ітерацій без покращення результату");
 		maxAffectIterationCountTf.setColumns(10);
-		maxAffectIterationCountTf.setBounds(878, 498, 46, 20);
-		contentPane.add(maxAffectIterationCountTf);
 		
 		JLabel lblMin = new JLabel("Min. допустиме покращення шляху");
+		lblMin.setBounds(6, 75, 197, 14);
+		panel_3.add(lblMin);
 		lblMin.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMin.setToolTipText("Мінімально допустиме значення на яке може бути покращенний шлях");
-		lblMin.setBounds(677, 529, 197, 14);
-		contentPane.add(lblMin);
 		
 		minPathImprovingTf = new JTextField();
+		minPathImprovingTf.setBounds(207, 72, 46, 20);
+		panel_3.add(minPathImprovingTf);
 		minPathImprovingTf.setText(String.valueOf(InitialData.minPathImproving));
 		minPathImprovingTf.setColumns(10);
-		minPathImprovingTf.setBounds(878, 526, 46, 20);
-		contentPane.add(minPathImprovingTf);
 		
-		JSeparator separator = new JSeparator();
-		separator.setBounds(677, 454, 234, 2);
-		contentPane.add(separator);
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.setBorderPainted(false);
+		menuBar.setBounds(80, 0, 576, 21);
+		contentPane.add(menuBar);
 		
-		JLabel label_1 = new JLabel("Критерії зупину");
-		label_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_1.setHorizontalAlignment(SwingConstants.CENTER);
-		label_1.setBounds(750, 433, 115, 14);
-		contentPane.add(label_1);
+		JMenu mnNewMenu = new JMenu("Файл");
+		menuBar.add(mnNewMenu);
 		
-		JLabel label_2 = new JLabel("Результати");
-		label_2.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_2.setHorizontalAlignment(SwingConstants.CENTER);
-		label_2.setBounds(750, 557, 115, 14);
-		contentPane.add(label_2);
+		JMenuItem saveDataToFileItem = new JMenuItem("Зберегти данні");
+		saveDataToFileItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fileopen = new JFileChooser();
+				fileopen.setCurrentDirectory(new File(defDirForData));
+				int ret = fileopen.showSaveDialog(contentPane);
+				 if (ret == JFileChooser.APPROVE_OPTION) {
+					 try {
+							SerializationHelper.serializeToFile(getCities(), fileopen.getSelectedFile());
+						} catch (IOException e) {
+							log.error(e);
+						}
+				 }
+			}
+		});
+		mnNewMenu.add(saveDataToFileItem);
 		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(677, 578, 234, 2);
-		contentPane.add(separator_1);
-		
-		JLabel label_3 = new JLabel("Керування");
-		label_3.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_3.setHorizontalAlignment(SwingConstants.CENTER);
-		label_3.setBounds(750, 240, 100, 14);
-		contentPane.add(label_3);
-		
-		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(677, 261, 234, 2);
-		contentPane.add(separator_2);
-		
-		JLabel label_4 = new JLabel("Поточна ітерація:");
-		label_4.setHorizontalAlignment(SwingConstants.LEFT);
-		label_4.setBounds(677, 631, 115, 14);
-		contentPane.add(label_4);
-		
-		currentIterationTf = new JTextField();
-		currentIterationTf.setEditable(false);
-		currentIterationTf.setBounds(825, 625, 86, 20);
-		contentPane.add(currentIterationTf);
-		currentIterationTf.setColumns(10);
-		
-		JLabel label_5 = new JLabel("Вірогідність мутації:");
-		label_5.setHorizontalAlignment(SwingConstants.LEFT);
-		label_5.setBounds(677, 83, 132, 14);
-		contentPane.add(label_5);
-		
-		mutationRateTf = new JTextField();
-		mutationRateTf.setText(String.valueOf(InitialData.mutationRate));
-		mutationRateTf.setBounds(819, 78, 46, 20);
-		contentPane.add(mutationRateTf);
-		mutationRateTf.setColumns(10);
-		
-		populationCountTf = new JTextField();
-		populationCountTf.setText(String.valueOf(InitialData.populationCount));
-		populationCountTf.setColumns(10);
-		populationCountTf.setBounds(819, 141, 46, 20);
-		contentPane.add(populationCountTf);
-		
-		JLabel label_7 = new JLabel("Розмір популяції:");
-		label_7.setHorizontalAlignment(SwingConstants.LEFT);
-		label_7.setBounds(677, 144, 132, 14);
-		contentPane.add(label_7);
-		
-		tournamentSizeTf = new JTextField();
-		tournamentSizeTf.setText(String.valueOf(InitialData.tournamentSize));
-		tournamentSizeTf.setColumns(10);
-		tournamentSizeTf.setBounds(819, 108, 46, 20);
-		contentPane.add(tournamentSizeTf);
-		
-		JLabel label_6 = new JLabel("Розмір турніру:");
-		label_6.setHorizontalAlignment(SwingConstants.LEFT);
-		label_6.setBounds(677, 113, 132, 14);
-		contentPane.add(label_6);
-		
-		JLabel label_8 = new JLabel("%");
-		label_8.setBounds(869, 78, 55, 19);
-		contentPane.add(label_8);
-		
-		JSeparator separator_3 = new JSeparator();
-		separator_3.setBounds(677, 32, 234, 2);
-		contentPane.add(separator_3);
-		
-		JLabel label_9 = new JLabel("Налаштування алгоритму");
-		label_9.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		label_9.setHorizontalAlignment(SwingConstants.CENTER);
-		label_9.setBounds(723, 11, 167, 14);
-		contentPane.add(label_9);
-		
-		greedyInitializationChb = new JCheckBox("Ініціалізація жадібним алгоритмом");
-		greedyInitializationChb.setHorizontalAlignment(SwingConstants.LEFT);
-		greedyInitializationChb.setBounds(673, 168, 224, 23);
-		contentPane.add(greedyInitializationChb);
+		JMenuItem loadDataFromFileItem = new JMenuItem("Загрузити данні");
+		loadDataFromFileItem.addActionListener(new ActionListener() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fileopen = new JFileChooser();
+				fileopen.setCurrentDirectory(new File(defDirForData));
+				int ret = fileopen.showOpenDialog(contentPane);
+			    if (ret == JFileChooser.APPROVE_OPTION) {
+			    	try {
+			    		setCities((List<City>)SerializationHelper.deserializeFromFile(fileopen.getSelectedFile()));
+					} catch (IOException | ClassNotFoundException e) {
+						log.error(e);
+					}
+			    }
+		    	
+			}
+		});
+		mnNewMenu.add(loadDataFromFileItem);
 	}
-	
+
+	public void setCities(List<City> cities) {
+		panel.setCities(cities);
+		panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
+		panel.repaint();
+	}
+
 	private void initializeData() {
 		InitialData.maxIterationCount = Integer.valueOf(maxIterationCountTf.getText());
 		InitialData.maxIterationCountWithoutImproving = Integer.valueOf(maxAffectIterationCountTf.getText());
@@ -349,13 +411,13 @@ public class GAMainWindow extends JFrame {
 		InitialData.populationCount = Integer.valueOf(populationCountTf.getText());
 		InitialData.tournamentSize = Integer.valueOf(tournamentSizeTf.getText());
 		InitialData.greedyInitialization = Boolean.valueOf(greedyInitializationChb.isSelected());
-		
+
 	}
-	
+
 	public void disableCalculation() {
 		btnCalculate.setEnabled(false);
 	}
-	
+
 	public void enableCalculation() {
 		btnCalculate.setEnabled(true);
 	}
@@ -373,11 +435,11 @@ public class GAMainWindow extends JFrame {
 			btnGenerate.setEnabled(false);
 		}
 	}
-	
+
 	public void setCurrentIteration(int currIteration) {
 		currentIterationTf.setText(String.valueOf(currIteration));
 	}
-	
+
 	public void setCityCount(int citisCount) {
 		citiesCountTf.setText(String.valueOf(citisCount));
 	}
