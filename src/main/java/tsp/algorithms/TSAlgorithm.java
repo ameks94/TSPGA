@@ -22,6 +22,7 @@ public abstract class TSAlgorithm implements Runnable {
 	protected double[][] distances;
 	protected int iterationCount = 1;
 	protected boolean needCalculate = true;
+	protected GAMainWindow mainWindow;
 
 	private CitiesPanel outputPanel;
 	private JLabel outputLabel;
@@ -29,7 +30,6 @@ public abstract class TSAlgorithm implements Runnable {
 	private double lastDistance;
 	private double currDistance;
 	private Map<Integer, Double> distancesAtIterations;
-	private GAMainWindow mainWindow;
 	private DefaultListModel iterationResultArea;
 
 	private boolean needShowResult = false;

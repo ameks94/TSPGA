@@ -21,6 +21,11 @@ public class GreedyAlgorithm extends TSAlgorithm{
 //
 //	}
 	
+	public Tour calculate() {
+		processCity(cities.get(0));
+		return new Tour(optCities);
+	}
+	
 	@Override
 	public void run() {
 		processCity(cities.get(0));

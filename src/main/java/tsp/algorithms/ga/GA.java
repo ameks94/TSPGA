@@ -1,12 +1,12 @@
 package tsp.algorithms.ga;
 
 import java.util.List;
+import java.util.Random;
 
 import tsp.algorithms.City;
 import tsp.algorithms.InitialData;
 import tsp.algorithms.TSAlgorithm;
-import tsp.algorithms.TSAlgorithmFactory;
-import tsp.algorithms.TSAlgorithmFactory.AlgorithmType;
+import tsp.algorithms.greedy.GreedyAlgorithm;
 import tsp.ui.GAMainWindow;
 
 public class GA extends TSAlgorithm {
@@ -16,9 +16,11 @@ public class GA extends TSAlgorithm {
 	private final int tournamentSize = InitialData.tournamentSize;	
 	private final boolean elitism = true;
 	private final int populationCount = InitialData.populationCount;
+	private final boolean greedyInitialization = InitialData.greedyInitialization;
+	private final int maxIterationCount = InitialData.maxIterationCount;
 	
 	// попробовать увеличить мутацию, когда 
-	// 1) максимум итераций... - максимальное кол итераций
+	// 1) + максимум итераций... - максимальное кол итераций
 	// 2) максимальное кол. безрезультатных итераций... ... нужно число итераций ввести...
 	// 3) ограничение на приемлемое улучшение.... тоесть если мы получаем прирост меньше заданого числа, то стоп
 	// 4) добавить другие критерии... в фитнес функцию 
@@ -33,47 +35,39 @@ public class GA extends TSAlgorithm {
 	@Override
 	public void run() {
 		Population pop = new Population(populationCount, cities, true);
-		while (needCalculate) {
+		if (greedyInitialization) {
+			pop.saveTour(0, new GreedyAlgorithm(mainWindow).calculate());
+		} 
+		while (needCalculate && iterationCount <= maxIterationCount) {
 			pop = evolvePopulation(pop);
 			setResult(pop.getFittest());
 			iterationCount++;
 		}
+		drawFinalResult();
 	}
 	
 
 	// Evolves a population over one generation
 	private Population evolvePopulation(Population pop) {
 		Population newPopulation = new Population(pop.populationSize(), cities, false);
-		//TODO + show iteration...
-		//TODO + show elite genome every iteration
-		//TODO show parents + child
-		//TODO % улучшения значения для елиты
-		//TODO как только элита перестала повышать результат... даем мутацию...
-		// Keep our best individual if elitism is enabled
-
-//		long start = System.nanoTime();
+		
 		int elitismOffset = 0;
 		if (elitism) {
 			newPopulation.saveTour(0, pop.getFittest());
 			elitismOffset = 1;
 		}
-//		System.out.println("Elit: " + (System.nanoTime() - start));
 		// Crossover population
 		// Loop over the new population's size and create individuals from
 		// Current population
-//		long start1 = System.nanoTime();
 		for (int i = elitismOffset; i < newPopulation.populationSize(); i++) {
 			// Select parents
 			Tour parent1 = tournamentSelection(pop);
 			Tour parent2 = tournamentSelection(pop);
-//			start = System.nanoTime();
 			// Crossover parents
 			Tour child = crossover(parent1, parent2);
-//			System.out.println("Crossover: " + (System.nanoTime() - start));
 			// Add child to new population
 			newPopulation.saveTour(i, child);
 		}
-//		System.out.println("Evolve: " + (System.nanoTime() - start1));
 
 		// Mutate the new population a bit to add some new genetic material
 		for (int i = elitismOffset; i < newPopulation.populationSize(); i++) {

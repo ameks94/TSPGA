@@ -57,6 +57,7 @@ public class GAMainWindow extends JFrame {
 	private JTextField mutationRateTf;
 	private JTextField populationCountTf;
 	private JTextField tournamentSizeTf;
+	private JCheckBox greedyInitializationChb;
 
 	/**
 	 * Create the frame.
@@ -90,38 +91,38 @@ public class GAMainWindow extends JFrame {
 		contentPane.add(cbAlgorithm);
 
 		btnCalculate = new JButton(startCalculationText);
-		btnCalculate.setBounds(677, 297, 247, 23);
+		btnCalculate.setBounds(677, 335, 247, 23);
 		btnCalculate.setEnabled(false);
 		contentPane.add(btnCalculate);
 		btnCalculate.setBackground(Color.GREEN);
 
 		JButton btnClear = new JButton("Очистити");
-		btnClear.setBounds(677, 331, 247, 23);
+		btnClear.setBounds(677, 369, 247, 23);
 		contentPane.add(btnClear);
 
 		JButton btnGenerate = new JButton("Генерувати");
-		btnGenerate.setBounds(677, 263, 247, 23);
+		btnGenerate.setBounds(677, 301, 247, 23);
 		contentPane.add(btnGenerate);
 
 		JButton btnTestchart = new JButton("Графік результатів");
-		btnTestchart.setBounds(677, 365, 247, 23);
+		btnTestchart.setBounds(677, 403, 247, 23);
 		contentPane.add(btnTestchart);
 
 		JLabel labelConstOptTour = new JLabel("Найкоротший шлях:");
 		labelConstOptTour.setHorizontalAlignment(SwingConstants.LEFT);
-		labelConstOptTour.setBounds(677, 561, 115, 14);
+		labelConstOptTour.setBounds(677, 598, 115, 14);
 		contentPane.add(labelConstOptTour);
 
 		lblOptimalTour = new JLabel("");
-		lblOptimalTour.setBounds(828, 554, 83, 21);
+		lblOptimalTour.setBounds(828, 591, 83, 21);
 		contentPane.add(lblOptimalTour);
 		lblOptimalTour.setForeground(Color.GREEN);
 		lblOptimalTour.setFont(new Font("Tahoma", Font.PLAIN, 16));
 
 		showDrawingChbx = new JCheckBox("Показати результати");
-		showDrawingChbx.setHorizontalAlignment(SwingConstants.RIGHT);
+		showDrawingChbx.setHorizontalAlignment(SwingConstants.LEFT);
 		showDrawingChbx.setSelected(true);
-		showDrawingChbx.setBounds(714, 172, 151, 23);
+		showDrawingChbx.setBounds(673, 194, 151, 23);
 		contentPane.add(showDrawingChbx);
 		btnTestchart.addActionListener(new ActionListener() {
 			@Override
@@ -202,89 +203,89 @@ public class GAMainWindow extends JFrame {
 		
 		JLabel label = new JLabel("Кількість міст:");
 		label.setHorizontalAlignment(SwingConstants.LEFT);
-		label.setBounds(702, 235, 115, 14);
+		label.setBounds(702, 273, 115, 14);
 		contentPane.add(label);
 		
 		citiesCountTf = new JTextField();
-		citiesCountTf.setBounds(844, 232, 46, 20);
+		citiesCountTf.setBounds(844, 270, 46, 20);
 		contentPane.add(citiesCountTf);
 		citiesCountTf.setColumns(10);
 		citiesCountTf.setText("20");
 		
 		JLabel lblMax_1 = new JLabel("Max. кількість ітерацій");
 		lblMax_1.setHorizontalAlignment(SwingConstants.LEFT);
-		lblMax_1.setBounds(677, 439, 150, 14);
+		lblMax_1.setBounds(677, 473, 150, 14);
 		contentPane.add(lblMax_1);
 		
 		maxIterationCountTf = new JTextField();
 		maxIterationCountTf.setText(String.valueOf(InitialData.maxIterationCount));
-		maxIterationCountTf.setBounds(878, 436, 46, 20);
+		maxIterationCountTf.setBounds(878, 470, 46, 20);
 		contentPane.add(maxIterationCountTf);
 		maxIterationCountTf.setColumns(10);
 		
 		JLabel lblMax = new JLabel("Max. ітерацій без покращення");
 		lblMax.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMax.setToolTipText("Максимальна кількість ітерацій без покращення результату");
-		lblMax.setBounds(677, 467, 197, 14);
+		lblMax.setBounds(677, 501, 197, 14);
 		contentPane.add(lblMax);
 		
 		maxAffectIterationCountTf = new JTextField();
 		maxAffectIterationCountTf.setText(String.valueOf(InitialData.maxIterationCountWithoutImproving));
 		maxAffectIterationCountTf.setToolTipText("Максимальна кількість ітерацій без покращення результату");
 		maxAffectIterationCountTf.setColumns(10);
-		maxAffectIterationCountTf.setBounds(878, 464, 46, 20);
+		maxAffectIterationCountTf.setBounds(878, 498, 46, 20);
 		contentPane.add(maxAffectIterationCountTf);
 		
 		JLabel lblMin = new JLabel("Min. допустиме покращення шляху");
 		lblMin.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMin.setToolTipText("Мінімально допустиме значення на яке може бути покращенний шлях");
-		lblMin.setBounds(677, 495, 197, 14);
+		lblMin.setBounds(677, 529, 197, 14);
 		contentPane.add(lblMin);
 		
 		minPathImprovingTf = new JTextField();
 		minPathImprovingTf.setText(String.valueOf(InitialData.minPathImproving));
 		minPathImprovingTf.setColumns(10);
-		minPathImprovingTf.setBounds(878, 492, 46, 20);
+		minPathImprovingTf.setBounds(878, 526, 46, 20);
 		contentPane.add(minPathImprovingTf);
 		
 		JSeparator separator = new JSeparator();
-		separator.setBounds(677, 420, 234, 2);
+		separator.setBounds(677, 454, 234, 2);
 		contentPane.add(separator);
 		
 		JLabel label_1 = new JLabel("Критерії зупину");
 		label_1.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		label_1.setHorizontalAlignment(SwingConstants.CENTER);
-		label_1.setBounds(750, 399, 115, 14);
+		label_1.setBounds(750, 433, 115, 14);
 		contentPane.add(label_1);
 		
 		JLabel label_2 = new JLabel("Результати");
 		label_2.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		label_2.setHorizontalAlignment(SwingConstants.CENTER);
-		label_2.setBounds(750, 520, 115, 14);
+		label_2.setBounds(750, 557, 115, 14);
 		contentPane.add(label_2);
 		
 		JSeparator separator_1 = new JSeparator();
-		separator_1.setBounds(677, 541, 234, 2);
+		separator_1.setBounds(677, 578, 234, 2);
 		contentPane.add(separator_1);
 		
 		JLabel label_3 = new JLabel("Керування");
 		label_3.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		label_3.setHorizontalAlignment(SwingConstants.CENTER);
-		label_3.setBounds(750, 202, 100, 14);
+		label_3.setBounds(750, 240, 100, 14);
 		contentPane.add(label_3);
 		
 		JSeparator separator_2 = new JSeparator();
-		separator_2.setBounds(677, 223, 234, 2);
+		separator_2.setBounds(677, 261, 234, 2);
 		contentPane.add(separator_2);
 		
 		JLabel label_4 = new JLabel("Поточна ітерація:");
 		label_4.setHorizontalAlignment(SwingConstants.LEFT);
-		label_4.setBounds(677, 594, 115, 14);
+		label_4.setBounds(677, 631, 115, 14);
 		contentPane.add(label_4);
 		
 		currentIterationTf = new JTextField();
 		currentIterationTf.setEditable(false);
-		currentIterationTf.setBounds(825, 588, 86, 20);
+		currentIterationTf.setBounds(825, 625, 86, 20);
 		contentPane.add(currentIterationTf);
 		currentIterationTf.setColumns(10);
 		
@@ -334,6 +335,11 @@ public class GAMainWindow extends JFrame {
 		label_9.setHorizontalAlignment(SwingConstants.CENTER);
 		label_9.setBounds(723, 11, 167, 14);
 		contentPane.add(label_9);
+		
+		greedyInitializationChb = new JCheckBox("Ініціалізація жадібним алгоритмом");
+		greedyInitializationChb.setHorizontalAlignment(SwingConstants.LEFT);
+		greedyInitializationChb.setBounds(673, 168, 224, 23);
+		contentPane.add(greedyInitializationChb);
 	}
 	
 	private void initializeData() {
@@ -343,6 +349,7 @@ public class GAMainWindow extends JFrame {
 		InitialData.mutationRate = Double.valueOf(mutationRateTf.getText());
 		InitialData.populationCount = Integer.valueOf(populationCountTf.getText());
 		InitialData.tournamentSize = Integer.valueOf(tournamentSizeTf.getText());
+		InitialData.greedyInitialization = Boolean.valueOf(greedyInitializationChb.isSelected());
 		
 	}
 	
