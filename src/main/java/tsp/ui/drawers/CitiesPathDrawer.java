@@ -29,32 +29,29 @@ public class CitiesPathDrawer extends DrawerStrategy {
 			curCity = cities.get(i);
 			nextCity = cities.get(i + 1);
 			if (InitialData.showDistances) {
-				g.setColor(Color.BLUE);
-				Point centrePoint = getCentrePoint(curCity, nextCity);
-				g.drawString(String.valueOf((int) TSAlgorithm.distances[curCity.getId()][nextCity.getId()]),
-						centrePoint.x, centrePoint.y);
-				g.setColor(Color.black);
+				drawDistanceValue(g, curCity, nextCity);
 			}
-
 			g.drawString(String.valueOf(curCity.getId()), curCity.getX(), curCity.getY() - 10);
 			g.drawRect(curCity.getX() - pointWidth / 2, curCity.getY() - pointWidth / 2, pointWidth, pointWidth);
 			g.drawLine(curCity.getX(), curCity.getY(), nextCity.getX(), nextCity.getY());
 		}
 		// draw from end to start
 		if (nextCity != null) {
-
 			if (InitialData.showDistances) {
-				g.setColor(Color.BLUE);
-				Point centrePoint = getCentrePoint(cities.get(0), nextCity);
-				g.drawString(String.valueOf((int) TSAlgorithm.distances[cities.get(0).getId()][nextCity.getId()]),
-						centrePoint.x, centrePoint.y);
-				g.setColor(Color.black);
+				drawDistanceValue(g, nextCity, cities.get(0));
 			}
-
 			g.drawString(String.valueOf(nextCity.getId()), nextCity.getX(), nextCity.getY() - 10);
 			g.drawRect(nextCity.getX() - pointWidth / 2, nextCity.getY() - pointWidth / 2, pointWidth, pointWidth);
 			g.drawLine(nextCity.getX(), nextCity.getY(), cities.get(0).getX(), cities.get(0).getY());
 		}
+	}
+	
+	private void drawDistanceValue(Graphics g, City fromCity, City toCity) {
+		g.setColor(Color.BLUE);
+		Point centrePoint = getCentrePoint(fromCity, toCity);
+		g.drawString(String.valueOf((int) TSAlgorithm.distances[fromCity.getId()][toCity.getId()]),
+				centrePoint.x, centrePoint.y);
+		g.setColor(Color.black);
 	}
 
 	private class Point {
