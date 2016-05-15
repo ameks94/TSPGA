@@ -11,6 +11,8 @@ public class InitialData {
 	public static int maxIterationCountWithoutImproving;
 	public static double minPathImproving;
 	
+	public static boolean showDistances;
+	
 	static {
 		tournamentSize = 10;
 		populationCount = 100;
@@ -21,5 +23,7 @@ public class InitialData {
 		minPathImproving = 0;
 		
 		greedyInitialization = false;
+		
+		showDistances = false;
 	}
 }

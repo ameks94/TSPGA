@@ -1,6 +1,5 @@
 package tsp;
 
-
 import java.awt.EventQueue;
 
 import tsp.ui.GAMainWindow;

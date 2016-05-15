@@ -124,6 +124,7 @@ public class Solver extends TSAlgorithm{
 	public void run() {
 		int[] path = calculate();
 		setResult(getTourFrom(path));
+		stopCalculation();
 		drawFinalResult();
 	}
 

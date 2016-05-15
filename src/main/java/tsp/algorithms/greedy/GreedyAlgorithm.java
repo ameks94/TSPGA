@@ -15,14 +15,6 @@ public class GreedyAlgorithm extends TSAlgorithm{
 	public GreedyAlgorithm(GAMainWindow mainWindow) {
 		super(mainWindow);
 	}
-
-//	@Override
-//	public Tour calculateTour() {
-//		processCity(cities.get(0));
-//		System.out.println(distance);
-//		return new Tour(optCities);
-//
-//	}
 	
 	/**@param toursCount - not more then cities.size()*/
 	public List<Tour> generateTours(int toursCount) {
@@ -41,6 +33,7 @@ public class GreedyAlgorithm extends TSAlgorithm{
 	public void run() {
 		processCity(cities.get(0));
 		setResult(new Tour(optCities));
+		stopCalculation();
 		drawFinalResult();
 	}
 	

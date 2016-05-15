@@ -17,9 +17,11 @@ import tsp.ui.GAMainWindow;
 import tsp.utils.CurrentResultForShowing;
 
 public abstract class TSAlgorithm implements Runnable {
+	
 	private static final Logger logger = Logger.getLogger(TSAlgorithm.class);
+	
+	public static double[][] distances;
 	protected List<City> cities;
-	protected double[][] distances;
 	protected int iterationCount = 1;
 	protected boolean needCalculate = true;
 	protected GAMainWindow mainWindow;
@@ -63,6 +65,11 @@ public abstract class TSAlgorithm implements Runnable {
 
 	public void stopCalculation() {
 		needCalculate = false;
+		mainWindow.setCalculated(true);
+	}
+	
+	public boolean isCalculationProcessed() {
+		return needCalculate;
 	}
 	
 	public Map<Integer, Double> getIterationDistances() {
@@ -92,11 +99,6 @@ public abstract class TSAlgorithm implements Runnable {
 		outputLabel.setText(String.valueOf(currentResult.getDistance()));
 		outputPanel.setCurrentTour(currentResult);
 		outputPanel.repaint();
-		setCalculated();
-	}
-
-	public void setCalculated() {
-		mainWindow.setCalculated(true);
 	}
 
 	// public Tour getCurrentResult() {

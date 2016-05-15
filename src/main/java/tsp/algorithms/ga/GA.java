@@ -22,6 +22,7 @@ public class GA extends TSAlgorithm {
 	
 	// попробовать увеличить мутацию, когда 
 	// 1) + максимум итераций... - максимальное кол итераций
+	// mx work time
 	// 2) максимальное кол. безрезультатных итераций... ... нужно число итераций ввести...
 	// 3) ограничение на приемлемое улучшение.... тоесть если мы получаем прирост меньше заданого числа, то стоп
 	// 4) добавить другие критерии... в фитнес функцию 
@@ -50,12 +51,21 @@ public class GA extends TSAlgorithm {
 				}
 			}
 		}
-		while (needCalculate && iterationCount <= maxIterationCount && iterationCount - iterWithLastImprooving <= maxIterationCountWithoutImproving) {
+//		setResult(pop.getFittest());
+		while (isContinueCalculation()) {
 			pop = evolvePopulation(pop);
 			setResult(pop.getFittest());
 			iterationCount++;
 		}
+		stopCalculation();
 		drawFinalResult();
+	}
+	
+	private boolean isContinueCalculation() {
+		return 
+				needCalculate && 
+				iterationCount <= maxIterationCount && 
+				iterationCount - iterWithLastImprooving <= maxIterationCountWithoutImproving;
 	}
 	
 
