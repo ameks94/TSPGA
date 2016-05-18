@@ -13,22 +13,27 @@ public class GA extends TSAlgorithm {
 
 	/* GA parameters */
 	private final double mutationRate = InitialData.mutationRate;
-	private final int tournamentSize = InitialData.tournamentSize;	
+	private final int tournamentSize = InitialData.tournamentSize;
 	private final boolean elitism = true;
 	private final int populationCount = InitialData.populationCount;
 	private final boolean greedyInitialization = InitialData.greedyInitialization;
 	private final int maxIterationCount = InitialData.maxIterationCount;
 	private final int maxIterationCountWithoutImproving = InitialData.maxIterationCountWithoutImproving;
+
+	// попробовать увеличить мутацию, когда
+	// + максимум итераций... - максимальное кол итераций
+	// + mx work time
+	// + максимальное кол. безрезультатных итераций... ... нужно число
+	// итераций ввести...
+	// !- ограничение на приемлемое улучшение.... тоесть если мы получаем
+	// прирост меньше заданого числа, то стоп
+	// 4) добавить другие критерии... в фитнес функцию
+	// +  показывать текущюю итерацию на UI постоянно
+	// + обавить вівод расстояний между городами... на каждой итерации
+	// + population initialization via greedy algorithm... UI checkbox
 	
-	// попробовать увеличить мутацию, когда 
-	// 1) + максимум итераций... - максимальное кол итераций
-	// mx work time
-	// 2) максимальное кол. безрезультатных итераций... ... нужно число итераций ввести...
-	// 3) ограничение на приемлемое улучшение.... тоесть если мы получаем прирост меньше заданого числа, то стоп
-	// 4) добавить другие критерии... в фитнес функцию 
-	// + 5) показывать текущюю итерацию на UI постоянно
-	// 6) обавить вівод расстояний между городами... на каждой итерации
-	// population initialization via greedy algorithm... UI checkbox
+	// add rout direction... rows
+	// add activated- deactivated checkbox fr restrictions 	
 
 	public GA(GAMainWindow mainWindow) {
 		super(mainWindow);
@@ -51,7 +56,7 @@ public class GA extends TSAlgorithm {
 				}
 			}
 		}
-//		setResult(pop.getFittest());
+		// setResult(pop.getFittest());
 		while (isContinueCalculation()) {
 			pop = evolvePopulation(pop);
 			setResult(pop.getFittest());
@@ -60,19 +65,16 @@ public class GA extends TSAlgorithm {
 		stopCalculation();
 		drawFinalResult();
 	}
-	
+
 	private boolean isContinueCalculation() {
-		return 
-				needCalculate && 
-				iterationCount <= maxIterationCount && 
-				iterationCount - iterWithLastImprooving <= maxIterationCountWithoutImproving;
+		return needCalculate && iterationCount <= maxIterationCount
+				&& iterationCount - iterWithLastImprooving <= maxIterationCountWithoutImproving;
 	}
-	
 
 	// Evolves a population over one generation
 	private Population evolvePopulation(Population pop) {
 		Population newPopulation = new Population(pop.populationSize(), cities, false);
-		
+
 		int elitismOffset = 0;
 		if (elitism) {
 			newPopulation.saveTour(0, pop.getFittest());
@@ -104,7 +106,7 @@ public class GA extends TSAlgorithm {
 		int tourSize = cities.size();
 		// Create new child tour
 		Tour child = new Tour(tourSize);
-		
+
 		// Get start and end sub tour positions for parent1's tour
 		int startPos = (int) (Math.random() * tourSize);
 		int endPos = (int) (Math.random() * tourSize);
@@ -121,7 +123,7 @@ public class GA extends TSAlgorithm {
 				}
 			}
 		}
-		
+
 		// Loop through parent2's city tour
 		for (int i = 0; i < tourSize; i++) {
 			// If child doesn't have the city add it
@@ -174,12 +176,12 @@ public class GA extends TSAlgorithm {
 		Tour fittest = tournament.getFittest();
 		return fittest;
 	}
-	
+
 	public class Population {
 
 		// Holds population of tours
 		Tour[] tours;
-		
+
 		boolean fittestCalculated = false;
 		Tour fittestCash;
 
@@ -188,7 +190,7 @@ public class GA extends TSAlgorithm {
 			tours = new Tour[populationSize];
 			// If we need to initialise a population of tours do so
 			if (initialise) {
-				
+
 				// Loop and create individuals
 				for (int i = 0; i < populationSize(); i++) {
 					Tour newTour = new Tour(cities.size());
@@ -210,6 +212,8 @@ public class GA extends TSAlgorithm {
 			return tours[index];
 		}
 
+		//TODO брать лучший по... сначало первый критерий... потом второй... потом третий...
+		// как сортировка по 3 значениям
 		// Gets the best tour in the population
 		public Tour getFittest() {
 			if (fittestCalculated) {

@@ -76,7 +76,6 @@ public class GAMainWindow extends JFrame {
 	private JTextField citiesCountTf;
 	private JTextField maxIterationCountTf;
 	private JTextField maxAffectIterationCountTf;
-	private JTextField minPathImprovingTf;
 	private JTextField maxWorkTimeTf;
 	private JTextField mutationRateTf;
 	private JTextField populationCountTf;
@@ -114,7 +113,7 @@ public class GAMainWindow extends JFrame {
 		panel_5.setLayout(null);
 
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(0, 0, 270, 192);
+		panel_2.setBounds(0, 9, 270, 192);
 		panel_5.add(panel_2);
 		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u041D\u0410\u041B\u0410\u0428\u0422\u0423\u0412\u0410\u041D\u041D\u042F \u0410\u041B\u0413\u041E\u0420\u0418\u0422\u041C\u0423",
@@ -192,7 +191,7 @@ public class GAMainWindow extends JFrame {
 		greedyInitializationChb.setHorizontalAlignment(SwingConstants.LEFT);
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(0, 191, 270, 186);
+		panel_1.setBounds(0, 212, 270, 186);
 		panel_5.add(panel_1);
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u041A\u0415\u0420\u0423\u0412\u0410\u041D\u041D\u042F", TitledBorder.LEFT, TitledBorder.TOP, null,
@@ -229,7 +228,7 @@ public class GAMainWindow extends JFrame {
 		citiesCountTf.setText("20");
 
 		JPanel panel_4 = new JPanel();
-		panel_4.setBounds(0, 519, 270, 105);
+		panel_4.setBounds(0, 514, 270, 105);
 		panel_5.add(panel_4);
 		panel_4.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u0420\u0415\u0417\u0423\u041B\u042C\u0422\u0410\u0422\u0418", TitledBorder.LEADING, TitledBorder.TOP,
@@ -268,7 +267,7 @@ public class GAMainWindow extends JFrame {
 		panel_4.add(currentTimeLbl);
 
 		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(0, 388, 270, 130);
+		panel_3.setBounds(0, 409, 270, 94);
 		panel_5.add(panel_3);
 		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u041A\u0420\u0418\u0422\u0415\u0420\u0406\u0407 \u0417\u0423\u041F\u0418\u041D\u0423",
@@ -287,36 +286,24 @@ public class GAMainWindow extends JFrame {
 		maxIterationCountTf.setColumns(10);
 
 		JLabel lblMax = new JLabel("Max. ітерацій без покращення");
-		lblMax.setBounds(6, 47, 197, 14);
+		lblMax.setBounds(6, 44, 197, 14);
 		panel_3.add(lblMax);
 		lblMax.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMax.setToolTipText("Максимальна кількість ітерацій без покращення результату");
 
 		maxAffectIterationCountTf = new JTextField();
-		maxAffectIterationCountTf.setBounds(207, 44, 53, 20);
+		maxAffectIterationCountTf.setBounds(207, 41, 53, 20);
 		panel_3.add(maxAffectIterationCountTf);
 		maxAffectIterationCountTf.setText(String.valueOf(InitialData.maxIterationCountWithoutImproving));
 		maxAffectIterationCountTf.setToolTipText("Максимальна кількість ітерацій без покращення результату");
 		maxAffectIterationCountTf.setColumns(10);
 
-		JLabel lblMin = new JLabel("Min. допустиме покращення шляху");
-		lblMin.setBounds(6, 75, 197, 14);
-		panel_3.add(lblMin);
-		lblMin.setHorizontalAlignment(SwingConstants.LEFT);
-		lblMin.setToolTipText("Мінімально допустиме значення на яке може бути покращенний шлях");
-
-		minPathImprovingTf = new JTextField();
-		minPathImprovingTf.setBounds(207, 72, 53, 20);
-		panel_3.add(minPathImprovingTf);
-		minPathImprovingTf.setText(String.valueOf(InitialData.minPathImproving));
-		minPathImprovingTf.setColumns(10);
-
 		JLabel label_1 = new JLabel("Максимальний час роботи (с.)");
-		label_1.setBounds(6, 100, 197, 14);
+		label_1.setBounds(6, 69, 197, 14);
 		panel_3.add(label_1);
 
 		maxWorkTimeTf = new JTextField();
-		maxWorkTimeTf.setBounds(207, 97, 53, 20);
+		maxWorkTimeTf.setBounds(207, 66, 53, 20);
 		panel_3.add(maxWorkTimeTf);
 		maxWorkTimeTf.setText("60");
 		maxWorkTimeTf.setColumns(10);
@@ -475,7 +462,6 @@ public class GAMainWindow extends JFrame {
 	private void initializeData() {
 		InitialData.maxIterationCount = Integer.valueOf(maxIterationCountTf.getText());
 		InitialData.maxIterationCountWithoutImproving = Integer.valueOf(maxAffectIterationCountTf.getText());
-		InitialData.minPathImproving = Double.valueOf(minPathImprovingTf.getText());
 		InitialData.mutationRate = Double.valueOf(mutationRateTf.getText());
 		InitialData.populationCount = Integer.valueOf(populationCountTf.getText());
 		InitialData.tournamentSize = Integer.valueOf(tournamentSizeTf.getText());

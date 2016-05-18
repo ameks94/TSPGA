@@ -107,7 +107,7 @@ public abstract class TSAlgorithm implements Runnable {
 
 	private void initializeDistances() {
 		int size = cities.size();
-		this.distances = new double[size][size];
+		distances = new double[size][size];
 
 		for (int i = 0; i < size; i++)// заполняю верхнюю триугольную матрицу
 		{
