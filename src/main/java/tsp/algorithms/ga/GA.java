@@ -220,13 +220,36 @@ public class GA extends TSAlgorithm {
 				return fittestCash;
 			}
 			Tour fittest = tours[0];
-			// Loop through individuals to find fittest
-			for (int i = 1; i < populationSize(); i++) {
-				if (fittest.getFitness() > getTour(i).getFitness()) {
-					fittest = getTour(i);
+			
+			if (InitialData.considerCostCriteria) {
+				// Loop through individuals to find fittest
+				for (int i = 1; i < populationSize(); i++) {
+					// real differences
+					double diffDistances = fittest.getFitnessDistance() - getTour(i).getFitnessDistance();
+					double diffCosts = fittest.getFitnessCosts() - getTour(i).getFitnessCosts();
+					
+					// calculate weight of every difference...
+					double weightDist = Math.abs(diffDistances / InitialData.distanceAllowRange);
+					double weightCosts = Math.abs(diffCosts / InitialData.costAllowRange);
+					
+					if (weightDist - weightCosts >= 0) {
+						if (diffDistances > 0) {
+							fittest = getTour(i);
+						}
+					} else {
+						if (diffCosts > 0) {
+							fittest = getTour(i);
+						}
+					}
 				}
-				
-				
+			} else {
+				// Loop through individuals to find fittest
+				for (int i = 1; i < populationSize(); i++) {
+					double diffDistances = fittest.getFitnessDistance() - getTour(i).getFitnessDistance();
+					if (diffDistances > 0) {
+						fittest = getTour(i);
+					}
+				}
 			}
 			fittestCash = fittest;
 			fittestCalculated = true;

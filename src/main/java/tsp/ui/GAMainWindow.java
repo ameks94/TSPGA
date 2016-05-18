@@ -174,7 +174,7 @@ public class GAMainWindow extends JFrame {
 		greedyInitializationChb.setHorizontalAlignment(SwingConstants.LEFT);
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(0, 141, 270, 327);
+		panel_1.setBounds(0, 141, 270, 299);
 		panel_5.add(panel_1);
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u041A\u0415\u0420\u0423\u0412\u0410\u041D\u041D\u042F", TitledBorder.LEFT, TitledBorder.TOP, null,
@@ -223,27 +223,19 @@ public class GAMainWindow extends JFrame {
 		showDistancesChb.setBounds(10, 217, 140, 23);
 		showDistancesChb.addActionListener((ActionEvent e) -> {InitialData.showDistances = ((JCheckBox) e.getSource()).isSelected();});
 		panel_1.add(showDistancesChb);
-
-		showTimesChb = new JCheckBox("Показати час");
-		showTimesChb.setForeground(Color.DARK_GRAY);
-		showTimesChb.setSelected(InitialData.showTimeCriteria);
-		showTimesChb.setHorizontalAlignment(SwingConstants.LEFT);
-		showTimesChb.setBounds(10, 243, 140, 23);
-		showTimesChb.addActionListener((ActionEvent e) -> {InitialData.showTimeCriteria = ((JCheckBox) e.getSource()).isSelected();});
-		panel_1.add(showTimesChb);
 		
 		showCostsChb = new JCheckBox("Показати вартість");
 		showCostsChb.setForeground(Color.RED);
 		showCostsChb.setSelected(InitialData.showCostCriteria);
 		showCostsChb.setHorizontalAlignment(SwingConstants.LEFT);
-		showCostsChb.setBounds(10, 269, 140, 23);
+		showCostsChb.setBounds(10, 243, 140, 23);
 		showCostsChb.addActionListener((ActionEvent e) -> {InitialData.showCostCriteria = ((JCheckBox) e.getSource()).isSelected();});
 		panel_1.add(showCostsChb);
 		
 		showDrawingChbx = new JCheckBox("Показати результати");
 		showDrawingChbx.setSelected(true);
 		showDrawingChbx.setHorizontalAlignment(SwingConstants.LEFT);
-		showDrawingChbx.setBounds(10, 295, 151, 23);
+		showDrawingChbx.setBounds(10, 269, 151, 23);
 		panel_1.add(showDrawingChbx);
 
 		JPanel panel_4 = new JPanel();
@@ -286,7 +278,7 @@ public class GAMainWindow extends JFrame {
 		panel_4.add(currentTimeLbl);
 
 		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(0, 468, 270, 94);
+		panel_3.setBounds(0, 451, 270, 94);
 		panel_5.add(panel_3);
 		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u041A\u0420\u0418\u0422\u0415\u0420\u0406\u0407 \u0417\u0423\u041F\u0418\u041D\u0423",
@@ -324,7 +316,7 @@ public class GAMainWindow extends JFrame {
 		maxWorkTimeTf = new JTextField();
 		maxWorkTimeTf.setBounds(207, 66, 53, 20);
 		panel_3.add(maxWorkTimeTf);
-		maxWorkTimeTf.setText("60");
+		maxWorkTimeTf.setText("360");
 		maxWorkTimeTf.setColumns(10);
 		btnTestchart.addActionListener(btnTestChartAction);
 
@@ -350,6 +342,14 @@ public class GAMainWindow extends JFrame {
 		JMenuItem loadDataFromFileItem = new JMenuItem("Загрузити данні");
 		loadDataFromFileItem.addActionListener(loadDataAction);
 		mnNewMenu.add(loadDataFromFileItem);
+		
+				showTimesChb = new JCheckBox("Показати час");
+				showTimesChb.setBounds(10, 111, 93, 23);
+				contentPane.add(showTimesChb);
+				showTimesChb.setForeground(Color.DARK_GRAY);
+				showTimesChb.setSelected(InitialData.showTimeCriteria);
+				showTimesChb.setHorizontalAlignment(SwingConstants.LEFT);
+				showTimesChb.addActionListener((ActionEvent e) -> {InitialData.showTimeCriteria = ((JCheckBox) e.getSource()).isSelected();});
 	}
 
 	private ActionListener addCriteriasBtnAction = new ActionListener() {

@@ -17,9 +17,9 @@ import tsp.ui.GAMainWindow;
 import tsp.utils.CurrentResultForShowing;
 
 public abstract class TSAlgorithm implements Runnable {
-	
+
 	private static final Logger logger = Logger.getLogger(TSAlgorithm.class);
-	
+
 	public static double[][] distances;
 	protected List<City> cities;
 	protected int iterationCount = 1;
@@ -31,7 +31,7 @@ public abstract class TSAlgorithm implements Runnable {
 
 	private CitiesPanel outputPanel;
 	private JLabel outputLabel;
-	private Tour currentResult;	
+	private Tour currentResult;
 	private Map<Integer, Double> distancesAtIterations;
 	private DefaultListModel iterationResultArea;
 
@@ -50,7 +50,7 @@ public abstract class TSAlgorithm implements Runnable {
 
 	protected void setResult(Tour currentResult) {
 		this.currentResult = currentResult;
-		this.currDistance = currentResult.getFitness();
+		this.currDistance = currentResult.getFitnessDistance();
 		mainWindow.setCurrentIteration(iterationCount);
 		outputLabel.setText(String.valueOf(currDistance));
 		if (currDistance != lastDistance) {
@@ -62,7 +62,7 @@ public abstract class TSAlgorithm implements Runnable {
 			lastDistance = currDistance;
 		}
 	}
-	
+
 	public static double[][] calculateDistances(List<City> cities) {
 		int size = cities.size();
 		double[][] distances = new double[size][size];
@@ -75,7 +75,7 @@ public abstract class TSAlgorithm implements Runnable {
 				distances[j][i] = distances[i][j];// копируем элементы верхней
 			}
 		}
-		
+
 		return distances;
 	}
 
@@ -83,11 +83,11 @@ public abstract class TSAlgorithm implements Runnable {
 		needCalculate = false;
 		mainWindow.setCalculated(true);
 	}
-	
+
 	public boolean isCalculationProcessed() {
 		return needCalculate;
 	}
-	
+
 	public Map<Integer, Double> getIterationDistances() {
 		return distancesAtIterations;
 	}
@@ -130,8 +130,14 @@ public abstract class TSAlgorithm implements Runnable {
 		// Holds our tour of cities
 		private List<City> tourCities = null;
 		// Cache
-		private double fitness = 0;
+		private double fitnessDistance = 0;
 		private int distance = 0;
+
+		private double fitnessTime = 0;
+		private int time = 0;
+
+		private double fitnessCost = 0;
+		private int cost = 0;
 
 		// Constructs a blank tour
 		public Tour(int tourSize) {
@@ -170,16 +176,36 @@ public abstract class TSAlgorithm implements Runnable {
 			tourCities.set(tourPosition, city);
 			// If the tours been altered we need to reset the fitness and
 			// distance
-			fitness = 0;
+			fitnessDistance = 0;
 			distance = 0;
+			fitnessCost = 0;
+			cost = 0;
+			fitnessTime = 0;
+			time = 0;
 		}
 
 		// Gets the tours fitness
-		public double getFitness() {
-			if (fitness == 0) {
-				fitness = getDistance();
+		public double getFitnessDistance() {
+			if (fitnessDistance == 0) {
+				fitnessDistance = getDistance();
 			}
-			return fitness;
+			return fitnessDistance;
+		}
+
+		// Gets the tours fitness
+		public double getFitnessTimes() {
+			if (fitnessTime == 0) {
+				fitnessTime = getTimes();
+			}
+			return fitnessTime;
+		}
+
+		// Gets the tours fitness
+		public double getFitnessCosts() {
+			if (fitnessCost == 0) {
+				fitnessCost = getCosts();
+			}
+			return fitnessCost;
 		}
 
 		// Gets the total distance of the tour
@@ -191,6 +217,28 @@ public abstract class TSAlgorithm implements Runnable {
 				distance += distances[getCity(tourSize() - 1).id][getCity(0).id];
 			}
 			return distance;
+		}
+
+		// Gets the total getTimes of the tour
+		public int getTimes() {
+			if (time == 0) {
+				for (int i = 0; i < tourSize() - 1; i++) {
+					time += InitialData.times[getCity(i).id][getCity(i + 1).id];
+				}
+				time += InitialData.times[getCity(tourSize() - 1).id][getCity(0).id];
+			}
+			return time;
+		}
+
+		// Gets the total getCosts of the tour
+		public int getCosts() {
+			if (cost == 0) {
+				for (int i = 0; i < tourSize() - 1; i++) {
+					cost += InitialData.costs[getCity(i).id][getCity(i + 1).id];
+				}
+				cost += InitialData.costs[getCity(tourSize() - 1).id][getCity(0).id];
+			}
+			return cost;
 		}
 
 		// Get number of cities on our tour
