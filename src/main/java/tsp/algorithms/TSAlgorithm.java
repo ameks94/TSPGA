@@ -62,6 +62,22 @@ public abstract class TSAlgorithm implements Runnable {
 			lastDistance = currDistance;
 		}
 	}
+	
+	public static double[][] calculateDistances(List<City> cities) {
+		int size = cities.size();
+		double[][] distances = new double[size][size];
+
+		for (int i = 0; i < size; i++)// заполняю верхнюю триугольную матрицу
+		{
+			cities.get(i).setId(i);
+			for (int j = i + 1; j < size; j++) {
+				distances[i][j] = cities.get(i).distanceTo(cities.get(j));
+				distances[j][i] = distances[i][j];// копируем элементы верхней
+			}
+		}
+		
+		return distances;
+	}
 
 	public void stopCalculation() {
 		needCalculate = false;
@@ -106,17 +122,7 @@ public abstract class TSAlgorithm implements Runnable {
 	// }
 
 	private void initializeDistances() {
-		int size = cities.size();
-		distances = new double[size][size];
-
-		for (int i = 0; i < size; i++)// заполняю верхнюю триугольную матрицу
-		{
-			cities.get(i).setId(i);
-			for (int j = i + 1; j < size; j++) {
-				distances[i][j] = cities.get(i).distanceTo(cities.get(j));
-				distances[j][i] = distances[i][j];// копируем элементы верхней
-			}
-		}
+		distances = calculateDistances(cities);
 	}
 
 	public class Tour {

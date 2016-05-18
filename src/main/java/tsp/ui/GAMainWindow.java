@@ -57,6 +57,7 @@ public class GAMainWindow extends JFrame {
 	private JButton btnCalculate;
 	private JButton btnClear;
 	private JButton btnGenerate;
+	private JButton addCriteriasBtn;
 
 	private JLabel currentIterationLbl;
 	private JLabel currentTimeLbl;
@@ -72,7 +73,6 @@ public class GAMainWindow extends JFrame {
 	private final String stopCalculationText = "Зупинити обрахунок";
 	private Thread runningAlgorythm;
 	private TSAlgorithm algorithm;
-	private JCheckBox showDrawingChbx;
 	private JTextField citiesCountTf;
 	private JTextField maxIterationCountTf;
 	private JTextField maxAffectIterationCountTf;
@@ -81,7 +81,11 @@ public class GAMainWindow extends JFrame {
 	private JTextField populationCountTf;
 	private JTextField tournamentSizeTf;
 	private JCheckBox greedyInitializationChb;
-	private JCheckBox chowDistancesChb;
+	
+	JCheckBox showDistancesChb;
+	JCheckBox showTimesChb;
+	JCheckBox showCostsChb;
+	JCheckBox showDrawingChbx;
 
 	/**
 	 * Create the frame.
@@ -89,7 +93,7 @@ public class GAMainWindow extends JFrame {
 	public GAMainWindow() {
 		super("GA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 957, 688);
+		setBounds(100, 100, 895, 750);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -98,45 +102,24 @@ public class GAMainWindow extends JFrame {
 		// Panel for drawing
 		panel = new CitiesPanel();
 		panel.setMainWindow(this);
-		panel.setBounds(10, 25, 657, 620);
+		panel.setBounds(10, 25, 601, 664);
 		contentPane.add(panel);
 		panel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		// panel.setBackground(Color.WHITE);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(677, 21, 270, 624);
-		contentPane.add(scrollPane);
-
 		JPanel panel_5 = new JPanel();
-		scrollPane.setViewportView(panel_5);
+		panel_5.setBounds(610, 25, 268, 664);
+		contentPane.add(panel_5);
 		panel_5.setLayout(null);
 
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(0, 9, 270, 192);
+		panel_2.setBounds(0, 9, 270, 135);
 		panel_5.add(panel_2);
 		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u041D\u0410\u041B\u0410\u0428\u0422\u0423\u0412\u0410\u041D\u041D\u042F \u0410\u041B\u0413\u041E\u0420\u0418\u0422\u041C\u0423",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_2.setLayout(null);
-
-		showDrawingChbx = new JCheckBox("Показати результати");
-		showDrawingChbx.setBounds(6, 162, 151, 23);
-		panel_2.add(showDrawingChbx);
-		showDrawingChbx.setHorizontalAlignment(SwingConstants.LEFT);
-		showDrawingChbx.setSelected(true);
-
-		chowDistancesChb = new JCheckBox("Показати відстані");
-		chowDistancesChb.setHorizontalAlignment(SwingConstants.LEFT);
-		chowDistancesChb.setBounds(6, 136, 140, 23);
-		chowDistancesChb.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				InitialData.showDistances = ((JCheckBox) e.getSource()).isSelected();
-			}
-		});
-		panel_2.add(chowDistancesChb);
 		// panel.set
 
 		JLabel lblAlgorithm = new JLabel("Алгоритм");
@@ -191,7 +174,7 @@ public class GAMainWindow extends JFrame {
 		greedyInitializationChb.setHorizontalAlignment(SwingConstants.LEFT);
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(0, 212, 270, 186);
+		panel_1.setBounds(0, 141, 270, 327);
 		panel_5.add(panel_1);
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u041A\u0415\u0420\u0423\u0412\u0410\u041D\u041D\u042F", TitledBorder.LEFT, TitledBorder.TOP, null,
@@ -199,13 +182,13 @@ public class GAMainWindow extends JFrame {
 		panel_1.setLayout(null);
 
 		btnCalculate = new JButton(startCalculationText);
-		btnCalculate.setBounds(10, 84, 247, 23);
+		btnCalculate.setBounds(10, 118, 247, 23);
 		panel_1.add(btnCalculate);
 		btnCalculate.setEnabled(false);
 		btnCalculate.setBackground(Color.GREEN);
 
 		btnClear = new JButton("Очистити");
-		btnClear.setBounds(10, 118, 247, 23);
+		btnClear.setBounds(10, 152, 247, 23);
 		panel_1.add(btnClear);
 
 		btnGenerate = new JButton("Генерувати");
@@ -213,7 +196,7 @@ public class GAMainWindow extends JFrame {
 		panel_1.add(btnGenerate);
 
 		JButton btnTestchart = new JButton("Графік результатів");
-		btnTestchart.setBounds(10, 152, 247, 23);
+		btnTestchart.setBounds(10, 187, 247, 23);
 		panel_1.add(btnTestchart);
 
 		JLabel label = new JLabel("Кількість міст:");
@@ -227,8 +210,44 @@ public class GAMainWindow extends JFrame {
 		citiesCountTf.setColumns(10);
 		citiesCountTf.setText("20");
 
+		addCriteriasBtn = new JButton("Додати критерії");
+		addCriteriasBtn.addActionListener(addCriteriasBtnAction);
+		addCriteriasBtn.setBounds(10, 84, 247, 23);
+		panel_1.add(addCriteriasBtn);
+		
+		showDistancesChb = new JCheckBox("Показати відстані");
+		showDistancesChb.setForeground(Color.BLUE);
+		showDistancesChb.setBackground(UIManager.getColor("Label.background"));
+		showDistancesChb.setSelected(InitialData.showDistances);
+		showDistancesChb.setHorizontalAlignment(SwingConstants.LEFT);
+		showDistancesChb.setBounds(10, 217, 140, 23);
+		showDistancesChb.addActionListener((ActionEvent e) -> {InitialData.showDistances = ((JCheckBox) e.getSource()).isSelected();});
+		panel_1.add(showDistancesChb);
+
+		showTimesChb = new JCheckBox("Показати час");
+		showTimesChb.setForeground(Color.DARK_GRAY);
+		showTimesChb.setSelected(InitialData.showTimeCriteria);
+		showTimesChb.setHorizontalAlignment(SwingConstants.LEFT);
+		showTimesChb.setBounds(10, 243, 140, 23);
+		showTimesChb.addActionListener((ActionEvent e) -> {InitialData.showTimeCriteria = ((JCheckBox) e.getSource()).isSelected();});
+		panel_1.add(showTimesChb);
+		
+		showCostsChb = new JCheckBox("Показати вартість");
+		showCostsChb.setForeground(Color.RED);
+		showCostsChb.setSelected(InitialData.showCostCriteria);
+		showCostsChb.setHorizontalAlignment(SwingConstants.LEFT);
+		showCostsChb.setBounds(10, 269, 140, 23);
+		showCostsChb.addActionListener((ActionEvent e) -> {InitialData.showCostCriteria = ((JCheckBox) e.getSource()).isSelected();});
+		panel_1.add(showCostsChb);
+		
+		showDrawingChbx = new JCheckBox("Показати результати");
+		showDrawingChbx.setSelected(true);
+		showDrawingChbx.setHorizontalAlignment(SwingConstants.LEFT);
+		showDrawingChbx.setBounds(10, 295, 151, 23);
+		panel_1.add(showDrawingChbx);
+
 		JPanel panel_4 = new JPanel();
-		panel_4.setBounds(0, 514, 270, 105);
+		panel_4.setBounds(0, 559, 270, 105);
 		panel_5.add(panel_4);
 		panel_4.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u0420\u0415\u0417\u0423\u041B\u042C\u0422\u0410\u0422\u0418", TitledBorder.LEADING, TitledBorder.TOP,
@@ -267,7 +286,7 @@ public class GAMainWindow extends JFrame {
 		panel_4.add(currentTimeLbl);
 
 		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(0, 409, 270, 94);
+		panel_3.setBounds(0, 468, 270, 94);
 		panel_5.add(panel_3);
 		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u041A\u0420\u0418\u0422\u0415\u0420\u0406\u0407 \u0417\u0423\u041F\u0418\u041D\u0423",
@@ -332,6 +351,15 @@ public class GAMainWindow extends JFrame {
 		loadDataFromFileItem.addActionListener(loadDataAction);
 		mnNewMenu.add(loadDataFromFileItem);
 	}
+
+	private ActionListener addCriteriasBtnAction = new ActionListener() {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			ConfigCriteriasWindow confWind = new ConfigCriteriasWindow(getMainWindow());
+			confWind.setVisible(true);
+		}
+	};
 
 	private ActionListener btnGenerateAction = new ActionListener() {
 		@Override
@@ -466,6 +494,8 @@ public class GAMainWindow extends JFrame {
 		InitialData.populationCount = Integer.valueOf(populationCountTf.getText());
 		InitialData.tournamentSize = Integer.valueOf(tournamentSizeTf.getText());
 		InitialData.greedyInitialization = Boolean.valueOf(greedyInitializationChb.isSelected());
+		// InitialData.useAdditionalCriteries =
+		// Boolean.valueOf(useAdditionalCriteriesChb.isSelected());
 	}
 
 	public void disableCalculation() {

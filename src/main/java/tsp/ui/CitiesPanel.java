@@ -73,7 +73,7 @@ public class CitiesPanel extends JPanel implements MouseInputListener {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
-		g.drawImage(image, 0,0,this.getWidth(),this.getHeight(),this);
+//		g.drawImage(image, 0,0,this.getWidth(),this.getHeight(),this);
 		
 		if (currentTour == null) {
 			currentTour = new ArrayList<>(cities);

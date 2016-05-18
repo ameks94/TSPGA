@@ -28,30 +28,40 @@ public class CitiesPathDrawer extends DrawerStrategy {
 		for (int i = 0; i < size - 1; i++) {
 			curCity = cities.get(i);
 			nextCity = cities.get(i + 1);
-			if (InitialData.showDistances) {
-				drawDistanceValue(g, curCity, nextCity);
-			}
-			g.drawString(String.valueOf(curCity.getId()), curCity.getX(), curCity.getY() - 10);
-			g.drawRect(curCity.getX() - pointWidth / 2, curCity.getY() - pointWidth / 2, pointWidth, pointWidth);
-			g.drawLine(curCity.getX(), curCity.getY(), nextCity.getX(), nextCity.getY());
+			drawElements(g, curCity, nextCity);
 		}
 		// draw from end to start
 		if (nextCity != null) {
-			if (InitialData.showDistances) {
-				drawDistanceValue(g, nextCity, cities.get(0));
-			}
-			g.drawString(String.valueOf(nextCity.getId()), nextCity.getX(), nextCity.getY() - 10);
-			g.drawRect(nextCity.getX() - pointWidth / 2, nextCity.getY() - pointWidth / 2, pointWidth, pointWidth);
-			g.drawLine(nextCity.getX(), nextCity.getY(), cities.get(0).getX(), cities.get(0).getY());
+			drawElements(g, nextCity, cities.get(0));
 		}
 	}
 	
-	private void drawDistanceValue(Graphics g, City fromCity, City toCity) {
-		g.setColor(Color.BLUE);
-		Point centrePoint = getCentrePoint(fromCity, toCity);
-		g.drawString(String.valueOf((int) TSAlgorithm.distances[fromCity.getId()][toCity.getId()]),
-				centrePoint.x, centrePoint.y);
-		g.setColor(Color.black);
+	private void drawElements(Graphics g, City fromCity, City toCity) {
+		if (InitialData.showDistances) {
+			g.setColor(Color.BLUE);
+			Point centrePoint = getCentrePoint(fromCity, toCity);
+			g.drawString(String.valueOf((int) TSAlgorithm.distances[fromCity.getId()][toCity.getId()]),
+					centrePoint.x, centrePoint.y - 10);
+			g.setColor(Color.black);
+		}
+		if (InitialData.showTimeCriteria && InitialData.considerTimeCriteria) {
+			g.setColor(Color.DARK_GRAY);
+			Point centrePoint = getCentrePoint(fromCity, toCity);
+			g.drawString(String.valueOf((int) InitialData.times[fromCity.getId()][toCity.getId()]),
+					centrePoint.x, centrePoint.y);
+			g.setColor(Color.black);
+		}
+		if (InitialData.showCostCriteria && InitialData.considerCostCriteria) {
+			g.setColor(Color.RED);
+			Point centrePoint = getCentrePoint(fromCity, toCity);
+			g.drawString(String.valueOf((int) InitialData.costs[fromCity.getId()][toCity.getId()]),
+					centrePoint.x, centrePoint.y + 10);
+			g.setColor(Color.black);
+		}
+		
+		g.drawString(String.valueOf(fromCity.getId()), fromCity.getX(), fromCity.getY() - 10);
+		g.drawRect(fromCity.getX() - pointWidth / 2, fromCity.getY() - pointWidth / 2, pointWidth, pointWidth);
+		g.drawLine(fromCity.getX(), fromCity.getY(), toCity.getX(), toCity.getY());
 	}
 
 	private class Point {
