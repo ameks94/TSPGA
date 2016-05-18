@@ -11,12 +11,15 @@ public class InitialData {
 	public static int maxIterationCountWithoutImproving;
 	public static double minPathImproving;
 	
+	public static double distanceWeight = 1;
 	public static boolean showDistances;
 	
 	public static boolean showTimeCriteria = false;
 	public static boolean showCostCriteria = false;
 	public static boolean considerTimeCriteria = false;
 	public static boolean considerCostCriteria = false;
+	public static double timeWeight = 1;
+	public static double costWeight = 1;
 	public static double[][] times = new double[0][0];
 	public static double[][] costs = new double[0][0];
 	

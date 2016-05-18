@@ -225,6 +225,8 @@ public class GA extends TSAlgorithm {
 				if (fittest.getFitness() > getTour(i).getFitness()) {
 					fittest = getTour(i);
 				}
+				
+				
 			}
 			fittestCash = fittest;
 			fittestCalculated = true;
