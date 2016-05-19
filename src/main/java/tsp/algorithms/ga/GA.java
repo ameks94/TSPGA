@@ -20,20 +20,14 @@ public class GA extends TSAlgorithm {
 	private final int maxIterationCount = InitialData.maxIterationCount;
 	private final int maxIterationCountWithoutImproving = InitialData.maxIterationCountWithoutImproving;
 
-	// попробовать увеличить мутацию, когда
-	// + максимум итераций... - максимальное кол итераций
-	// + mx work time
-	// + максимальное кол. безрезультатных итераций... ... нужно число
-	// итераций ввести...
-	// !- ограничение на приемлемое улучшение.... тоесть если мы получаем
-	// прирост меньше заданого числа, то стоп
-	// 4) добавить другие критерии... в фитнес функцию
-	// +  показывать текущюю итерацию на UI постоянно
-	// + обавить вівод расстояний между городами... на каждой итерации
-	// + population initialization via greedy algorithm... UI checkbox
+	//TODO - добавить мутацию другую + настрока их
 	
-	// add rout direction... rows
-	// add activated- deactivated checkbox fr restrictions 	
+	// +add rout direction... rows
+	// +add activated- deactivated checkbox for restrictions
+	//TODO обавить начальный город.... или рандом
+	//TODO add cool windows placement -> cascade... или сохранить позиции
+	//TODO добавить отдельное окно для настройки всех параметров
+	//TODO добавить мутацию вторую
 
 	public GA(GAMainWindow mainWindow) {
 		super(mainWindow);

@@ -81,7 +81,7 @@ public class GAMainWindow extends JFrame {
 	private JTextField populationCountTf;
 	private JTextField tournamentSizeTf;
 	private JCheckBox greedyInitializationChb;
-	
+
 	JCheckBox showDistancesChb;
 	JCheckBox showTimesChb;
 	JCheckBox showCostsChb;
@@ -114,7 +114,7 @@ public class GAMainWindow extends JFrame {
 		panel_5.setLayout(null);
 
 		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(0, 9, 270, 135);
+		panel_2.setBounds(0, 0, 270, 168);
 		panel_5.add(panel_2);
 		panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u041D\u0410\u041B\u0410\u0428\u0422\u0423\u0412\u0410\u041D\u041D\u042F \u0410\u041B\u0413\u041E\u0420\u0418\u0422\u041C\u0423",
@@ -128,7 +128,7 @@ public class GAMainWindow extends JFrame {
 		lblAlgorithm.setHorizontalAlignment(SwingConstants.LEFT);
 
 		cbAlgorithm = new JComboBox<AlgorithmType>();
-		cbAlgorithm.setBounds(126, 16, 131, 21);
+		cbAlgorithm.setBounds(126, 16, 131, 17);
 		panel_2.add(cbAlgorithm);
 
 		JLabel label_5 = new JLabel("Вірогідність мутації:");
@@ -137,13 +137,13 @@ public class GAMainWindow extends JFrame {
 		label_5.setHorizontalAlignment(SwingConstants.LEFT);
 
 		mutationRateTf = new JTextField();
-		mutationRateTf.setBounds(152, 43, 46, 20);
+		mutationRateTf.setBounds(171, 40, 46, 20);
 		panel_2.add(mutationRateTf);
 		mutationRateTf.setText(String.valueOf(InitialData.mutationRate));
 		mutationRateTf.setColumns(10);
 
 		populationCountTf = new JTextField();
-		populationCountTf.setBounds(152, 88, 46, 20);
+		populationCountTf.setBounds(171, 88, 46, 20);
 		panel_2.add(populationCountTf);
 		populationCountTf.setText(String.valueOf(InitialData.populationCount));
 		populationCountTf.setColumns(10);
@@ -154,7 +154,7 @@ public class GAMainWindow extends JFrame {
 		label_7.setHorizontalAlignment(SwingConstants.LEFT);
 
 		tournamentSizeTf = new JTextField();
-		tournamentSizeTf.setBounds(152, 66, 46, 20);
+		tournamentSizeTf.setBounds(171, 63, 46, 20);
 		panel_2.add(tournamentSizeTf);
 		tournamentSizeTf.setText(String.valueOf(InitialData.tournamentSize));
 		tournamentSizeTf.setColumns(10);
@@ -165,16 +165,26 @@ public class GAMainWindow extends JFrame {
 		label_6.setHorizontalAlignment(SwingConstants.LEFT);
 
 		JLabel label_8 = new JLabel("%");
-		label_8.setBounds(202, 43, 55, 19);
+		label_8.setBounds(221, 40, 36, 19);
 		panel_2.add(label_8);
 
+		JLabel label_2 = new JLabel("Номер початкового міста:");
+		label_2.setBounds(6, 114, 162, 14);
+		panel_2.add(label_2);
+
+		startCityIndexTf = new JTextField();
+		startCityIndexTf.setText("0");
+		startCityIndexTf.setBounds(171, 111, 46, 20);
+		panel_2.add(startCityIndexTf);
+		startCityIndexTf.setColumns(10);
+
 		greedyInitializationChb = new JCheckBox("Ініціалізація жадібним алгоритмом");
-		greedyInitializationChb.setBounds(6, 110, 251, 23);
+		greedyInitializationChb.setBounds(6, 138, 251, 23);
 		panel_2.add(greedyInitializationChb);
 		greedyInitializationChb.setHorizontalAlignment(SwingConstants.LEFT);
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(0, 141, 270, 299);
+		panel_1.setBounds(0, 179, 270, 285);
 		panel_5.add(panel_1);
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u041A\u0415\u0420\u0423\u0412\u0410\u041D\u041D\u042F", TitledBorder.LEFT, TitledBorder.TOP, null,
@@ -182,60 +192,64 @@ public class GAMainWindow extends JFrame {
 		panel_1.setLayout(null);
 
 		btnCalculate = new JButton(startCalculationText);
-		btnCalculate.setBounds(10, 118, 247, 23);
+		btnCalculate.setBounds(6, 107, 247, 23);
 		panel_1.add(btnCalculate);
 		btnCalculate.setEnabled(false);
 		btnCalculate.setBackground(Color.GREEN);
 
 		btnClear = new JButton("Очистити");
-		btnClear.setBounds(10, 152, 247, 23);
+		btnClear.setBounds(6, 141, 247, 23);
 		panel_1.add(btnClear);
 
 		btnGenerate = new JButton("Генерувати");
-		btnGenerate.setBounds(10, 50, 247, 23);
+		btnGenerate.setBounds(6, 39, 247, 23);
 		panel_1.add(btnGenerate);
 
 		JButton btnTestchart = new JButton("Графік результатів");
-		btnTestchart.setBounds(10, 187, 247, 23);
+		btnTestchart.setBounds(6, 176, 247, 23);
 		panel_1.add(btnTestchart);
 
 		JLabel label = new JLabel("Кількість міст:");
-		label.setBounds(10, 25, 115, 14);
+		label.setBounds(82, 14, 115, 14);
 		panel_1.add(label);
 		label.setHorizontalAlignment(SwingConstants.LEFT);
 
 		citiesCountTf = new JTextField();
-		citiesCountTf.setBounds(127, 22, 46, 20);
+		citiesCountTf.setBounds(207, 11, 46, 20);
 		panel_1.add(citiesCountTf);
 		citiesCountTf.setColumns(10);
 		citiesCountTf.setText("20");
 
 		addCriteriasBtn = new JButton("Додати критерії");
 		addCriteriasBtn.addActionListener(addCriteriasBtnAction);
-		addCriteriasBtn.setBounds(10, 84, 247, 23);
+		addCriteriasBtn.setBounds(6, 73, 247, 23);
 		panel_1.add(addCriteriasBtn);
-		
+
 		showDistancesChb = new JCheckBox("Показати відстані");
 		showDistancesChb.setForeground(Color.BLUE);
 		showDistancesChb.setBackground(UIManager.getColor("Label.background"));
 		showDistancesChb.setSelected(InitialData.showDistances);
 		showDistancesChb.setHorizontalAlignment(SwingConstants.LEFT);
-		showDistancesChb.setBounds(10, 217, 140, 23);
-		showDistancesChb.addActionListener((ActionEvent e) -> {InitialData.showDistances = ((JCheckBox) e.getSource()).isSelected();});
+		showDistancesChb.setBounds(6, 206, 140, 23);
+		showDistancesChb.addActionListener((ActionEvent e) -> {
+			InitialData.showDistances = ((JCheckBox) e.getSource()).isSelected();
+		});
 		panel_1.add(showDistancesChb);
-		
+
 		showCostsChb = new JCheckBox("Показати вартість");
 		showCostsChb.setForeground(Color.RED);
 		showCostsChb.setSelected(InitialData.showCostCriteria);
 		showCostsChb.setHorizontalAlignment(SwingConstants.LEFT);
-		showCostsChb.setBounds(10, 243, 140, 23);
-		showCostsChb.addActionListener((ActionEvent e) -> {InitialData.showCostCriteria = ((JCheckBox) e.getSource()).isSelected();});
+		showCostsChb.setBounds(6, 232, 140, 23);
+		showCostsChb.addActionListener((ActionEvent e) -> {
+			InitialData.showCostCriteria = ((JCheckBox) e.getSource()).isSelected();
+		});
 		panel_1.add(showCostsChb);
-		
+
 		showDrawingChbx = new JCheckBox("Показати результати");
 		showDrawingChbx.setSelected(true);
 		showDrawingChbx.setHorizontalAlignment(SwingConstants.LEFT);
-		showDrawingChbx.setBounds(10, 269, 151, 23);
+		showDrawingChbx.setBounds(6, 258, 151, 23);
 		panel_1.add(showDrawingChbx);
 
 		JPanel panel_4 = new JPanel();
@@ -278,7 +292,7 @@ public class GAMainWindow extends JFrame {
 		panel_4.add(currentTimeLbl);
 
 		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(0, 451, 270, 94);
+		panel_3.setBounds(0, 464, 270, 94);
 		panel_5.add(panel_3);
 		panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"),
 				"\u041A\u0420\u0418\u0422\u0415\u0420\u0406\u0407 \u0417\u0423\u041F\u0418\u041D\u0423",
@@ -342,14 +356,16 @@ public class GAMainWindow extends JFrame {
 		JMenuItem loadDataFromFileItem = new JMenuItem("Загрузити данні");
 		loadDataFromFileItem.addActionListener(loadDataAction);
 		mnNewMenu.add(loadDataFromFileItem);
-		
-				showTimesChb = new JCheckBox("Показати час");
-				showTimesChb.setBounds(10, 111, 93, 23);
-				contentPane.add(showTimesChb);
-				showTimesChb.setForeground(Color.DARK_GRAY);
-				showTimesChb.setSelected(InitialData.showTimeCriteria);
-				showTimesChb.setHorizontalAlignment(SwingConstants.LEFT);
-				showTimesChb.addActionListener((ActionEvent e) -> {InitialData.showTimeCriteria = ((JCheckBox) e.getSource()).isSelected();});
+
+		showTimesChb = new JCheckBox("Показати час");
+		showTimesChb.setBounds(10, 111, 93, 23);
+		contentPane.add(showTimesChb);
+		showTimesChb.setForeground(Color.DARK_GRAY);
+		showTimesChb.setSelected(InitialData.showTimeCriteria);
+		showTimesChb.setHorizontalAlignment(SwingConstants.LEFT);
+		showTimesChb.addActionListener((ActionEvent e) -> {
+			InitialData.showTimeCriteria = ((JCheckBox) e.getSource()).isSelected();
+		});
 	}
 
 	private ActionListener addCriteriasBtnAction = new ActionListener() {
@@ -480,6 +496,7 @@ public class GAMainWindow extends JFrame {
 			}
 		}
 	};
+	private JTextField startCityIndexTf;
 
 	public void setCities(List<City> cities) {
 		panel.setCities(cities);
@@ -534,6 +551,10 @@ public class GAMainWindow extends JFrame {
 
 	public List<City> getCities() {
 		return panel.getCities();
+	}
+	
+	public int getStartCityIndex() {
+		return Integer.valueOf(startCityIndexTf.getText());
 	}
 
 	public JLabel getOutputLable() {

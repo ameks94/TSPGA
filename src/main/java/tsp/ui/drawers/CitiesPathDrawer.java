@@ -21,6 +21,7 @@ public class CitiesPathDrawer extends DrawerStrategy {
 			drawCitiesPath(g, cities);
 		}
 	}
+	//TODO 
 
 	/** Draws path */
 	private void drawCitiesPath(Graphics g, List<City> cities) {

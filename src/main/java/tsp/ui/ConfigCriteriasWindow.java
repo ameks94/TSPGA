@@ -167,8 +167,8 @@ public class ConfigCriteriasWindow extends JFrame {
 				String row = "";
 				for (int j = 0; j < size; j++) {
 					double distance = distances[i][j];
-					int sign = i % 3 == 0 ? -1 : 1;
-					costs[i][j] = distance + sign * 0.15 * distance;
+					int sign = i % 2 == 0 ? -1 : 1;
+					costs[i][j] = distance + sign * 0.2 * distance;
 					row += df.format(costs[i][j]) + "  ";
 				}
 				textArea.append(row + "\n");

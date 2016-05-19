@@ -12,6 +12,8 @@ import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.collect.Iterables;
+
 import tsp.ui.CitiesPanel;
 import tsp.ui.GAMainWindow;
 import tsp.utils.CurrentResultForShowing;
@@ -34,11 +36,13 @@ public abstract class TSAlgorithm implements Runnable {
 	private Tour currentResult;
 	private Map<Integer, Double> distancesAtIterations;
 	private DefaultListModel iterationResultArea;
+	private int startCityIndex = 0;
 
 	private boolean needShowResult = false;
 
 	public TSAlgorithm(GAMainWindow mainWindow) {
 		this.mainWindow = mainWindow;
+		this.startCityIndex = mainWindow.getStartCityIndex();
 		this.cities = mainWindow.getCities();
 		this.outputPanel = mainWindow.getOutputPanel();
 		this.outputLabel = mainWindow.getOutputLable();
@@ -95,7 +99,7 @@ public abstract class TSAlgorithm implements Runnable {
 	// for GA
 	protected void drawCurrentResult() {
 		CurrentResultForShowing currResult = new CurrentResultForShowing();
-		currResult.setTour(currentResult.copyTour());
+		currResult.setTour(reorderTourDependingStartCity(currentResult.copyTour()));
 		currResult.setDistance(currDistance);
 		currResult.setIteration(iterationCount);
 		SwingUtilities.invokeLater(new Runnable() {
@@ -107,7 +111,17 @@ public abstract class TSAlgorithm implements Runnable {
 				iterationResultArea.addElement(currResult);
 			}
 		});
-
+	}
+	
+	private Tour reorderTourDependingStartCity(Tour tour) {
+		List<City> cities = tour.tourCities;
+		int size = cities.size();
+		int indexOfCity = Iterables.indexOf(cities, city -> city.id == startCityIndex);
+		Tour reorderedTour = new Tour(size);
+		for (int i = 0; i < size; i++) {
+			reorderedTour.setCity(i, cities.get((indexOfCity++) % size));
+		}
+		return reorderedTour;
 	}
 
 	// for algorithms that can finish calculation
