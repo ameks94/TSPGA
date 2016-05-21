@@ -2,8 +2,10 @@ package tsp.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -63,7 +65,7 @@ public class ConfigCriteriasWindow extends JFrame {
 		generateCosts = new JButton("Генерувати вартість");
 		generateCosts.setEnabled(InitialData.considerCostCriteria);
 		generateCosts.addActionListener(generateCostListener);
-		generateCosts.setBounds(66, 103, 181, 23);
+		generateCosts.setBounds(6, 103, 166, 23);
 		contentPane.add(generateCosts);
 
 		scrollPane = new JScrollPane();
@@ -92,25 +94,32 @@ public class ConfigCriteriasWindow extends JFrame {
 
 		saveBtn = new JButton("Зберегти у файл");
 		saveBtn.setBounds(182, 69, 135, 23);
-		saveBtn.addActionListener(applyAction);
+		saveBtn.addActionListener(saveAction);
 		contentPane.add(saveBtn);
 
-		JButton button = new JButton("Загрузити з файлу");
-		button.setBounds(6, 69, 166, 23);
+		JButton loadBtn = new JButton("Загрузити з файлу");
+		loadBtn.setBounds(6, 69, 166, 23);
+		loadBtn.addActionListener(loadDataAction);
+		contentPane.add(loadBtn);
+		
+		button = new JButton("Прийняти");
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				InitialData.distanceAllowRange = Double.valueOf(distanceWeightTf.getText());
+				InitialData.costAllowRange = Double.valueOf(costWeightTf.getText());
+				// InitialData.timeAllowRange =
+				// Double.valueOf(timeWeightTf.getText());
+				InitialData.considerCostCriteria = considerCostChb.isSelected();
+				// InitialData.considerTimeCriteria = considerTimeChb.isSelected();
+			}
+		});
+		button.setBounds(182, 103, 133, 23);
 		contentPane.add(button);
 	}
 
-	private ActionListener applyAction = new ActionListener() {
-
+	private ActionListener saveAction = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			InitialData.distanceAllowRange = Double.valueOf(distanceWeightTf.getText());
-			InitialData.costAllowRange = Double.valueOf(costWeightTf.getText());
-			// InitialData.timeAllowRange =
-			// Double.valueOf(timeWeightTf.getText());
-			InitialData.considerCostCriteria = considerCostChb.isSelected();
-			// InitialData.considerTimeCriteria = considerTimeChb.isSelected();
-
 			JFileChooser fileopen = new JFileChooser();
 			fileopen.setCurrentDirectory(new File(FileHelper.defDirForCosts));
 			int ret = fileopen.showSaveDialog(contentPane);
@@ -118,6 +127,9 @@ public class ConfigCriteriasWindow extends JFrame {
 				File file = new File(fileopen.getSelectedFile().getAbsolutePath());
 				try (BufferedWriter writer = new BufferedWriter(new FileWriter(file));) {
 					int size = InitialData.costs.length;
+					writer.write(String.valueOf(size));
+					writer.newLine();
+					
 					for (int i = 0; i < size; i++) {
 						for (int j = 0; j < size; j++) {
 							writer.write(df.format(InitialData.costs[i][j]) + " ");
@@ -131,29 +143,38 @@ public class ConfigCriteriasWindow extends JFrame {
 			}
 		}
 	};
-
-	private ActionListener generateTimeListener = new ActionListener() {
-
+	
+	private ActionListener loadDataAction = new ActionListener() {
+		@SuppressWarnings("unchecked")
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			textArea.setText("");
-			int size = cities.size();
-			double[][] times = new double[size][size];
-			
-			for (int i = 0; i < size; i++)// заполняю верхнюю триугольную матрицу
-			{
-				String row = "";
-				for (int j = i + 1; j < size; j++) {
-					double distance = distances[i][j];
-					int sign = i % 2 == 0 ? -1 : 1;
-					times[i][j] = distance + sign * 0.1 * distance;
-					times[j][i] = times[i][j];
-					row += df.format(times[i][j]) + "  ";
+		public void actionPerformed(ActionEvent arg0) {
+			JFileChooser fileopen = new JFileChooser();
+			fileopen.setCurrentDirectory(new File(FileHelper.defDirForCosts));
+			int ret = fileopen.showOpenDialog(contentPane);
+			if (ret == JFileChooser.APPROVE_OPTION) {
+				File file = new File(fileopen.getSelectedFile().getAbsolutePath());
+				try (BufferedReader reader = new BufferedReader(new FileReader(file));) {
+					String line = reader.readLine();
+					int size = Integer.valueOf(line);
+					double[][] costs = new double[size][size];
+					
+					for (int i = 0; i < size; i++) {
+						line = reader.readLine();
+						String[] values = line.split(" ");
+						String row = "";
+						for (int j = 0; j < size; j++) {
+							costs[i][j] = Double.valueOf(values[j]);
+							row += df.format(costs[i][j]) + "  ";
+						}
+						textArea.append(row + "\n");
+					}
+					
+					InitialData.costs = costs;
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-				textArea.append(row + "\n");
 			}
-			
-			InitialData.times = times;
 		}
 	};
 
@@ -166,7 +187,6 @@ public class ConfigCriteriasWindow extends JFrame {
 			double[][] costs = new double[size][size];
 			for (int i = 0; i < size; i++)// заполняю верхнюю триугольную матрицу
 			{
-				
 				for (int j = i + 1; j < size; j++) {
 					double distance = distances[i][j];
 					int sign = i % 2 == 0 ? -1 : 1;
@@ -190,4 +210,5 @@ public class ConfigCriteriasWindow extends JFrame {
 	private JTextField costWeightTf;
 	private JTextField distanceWeightTf;
 	private JButton saveBtn;
+	private JButton button;
 }

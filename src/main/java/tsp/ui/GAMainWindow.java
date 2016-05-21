@@ -173,7 +173,7 @@ public class GAMainWindow extends JFrame {
 		panel_2.add(label_2);
 
 		startCityIndexTf = new JTextField();
-		startCityIndexTf.setText("0");
+		startCityIndexTf.setText("1");
 		startCityIndexTf.setBounds(171, 111, 46, 20);
 		panel_2.add(startCityIndexTf);
 		startCityIndexTf.setColumns(10);
@@ -220,7 +220,7 @@ public class GAMainWindow extends JFrame {
 		citiesCountTf.setColumns(10);
 		citiesCountTf.setText("20");
 
-		addCriteriasBtn = new JButton("Додати критерії");
+		addCriteriasBtn = new JButton("Налаштувати критерії");
 		addCriteriasBtn.addActionListener(addCriteriasBtnAction);
 		addCriteriasBtn.setBounds(6, 73, 247, 23);
 		panel_1.add(addCriteriasBtn);
@@ -554,7 +554,7 @@ public class GAMainWindow extends JFrame {
 	}
 	
 	public int getStartCityIndex() {
-		return Integer.valueOf(startCityIndexTf.getText());
+		return Integer.valueOf(startCityIndexTf.getText()) - 1;
 	}
 
 	public JLabel getOutputLable() {
