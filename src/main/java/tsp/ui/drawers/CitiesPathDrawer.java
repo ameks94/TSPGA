@@ -61,7 +61,7 @@ public class CitiesPathDrawer extends DrawerStrategy {
 			g.setColor(Color.black);
 		}
 		
-		g.drawString(String.valueOf(fromCity.getId()), fromCity.getX(), fromCity.getY() - 10);
+		g.drawString(String.valueOf(fromCity.getId() + 1), fromCity.getX(), fromCity.getY() - 10);
 //		g.drawRect(fromCity.getX() - pointWidth / 2, fromCity.getY() - pointWidth / 2, pointWidth, pointWidth);
 //		g.drawLine(fromCity.getX(), fromCity.getY(), toCity.getX(), toCity.getY());
 		drawLine(g, fromCity, toCity);

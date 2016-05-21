@@ -40,6 +40,7 @@ import tsp.algorithms.TSAlgorithmFactory.AlgorithmType;
 import tsp.ui.charts.TourChart;
 import tsp.ui.drawers.DrawerFactory;
 import tsp.ui.drawers.DrawerFactory.DrawerType;
+import tsp.utils.FileHelper;
 import tsp.utils.GeneratorHelper;
 import tsp.utils.SerializationHelper;
 import javax.swing.border.TitledBorder;
@@ -64,7 +65,6 @@ public class GAMainWindow extends JFrame {
 
 	private Timer timer;
 	private long startCalculationTime;
-	private static final String defDirForData = "inputFiles/.";
 
 	private ResultWindow resultWindow;
 	// private TextArea logArea;
@@ -260,7 +260,7 @@ public class GAMainWindow extends JFrame {
 				null, new Color(0, 0, 0)));
 		panel_4.setLayout(null);
 
-		JLabel labelConstOptTour = new JLabel("Найкоротший шлях:");
+		JLabel labelConstOptTour = new JLabel("Шлях:");
 		labelConstOptTour.setBounds(6, 23, 115, 14);
 		panel_4.add(labelConstOptTour);
 		labelConstOptTour.setHorizontalAlignment(SwingConstants.LEFT);
@@ -385,8 +385,8 @@ public class GAMainWindow extends JFrame {
 			if (citiesCount == 0) {
 				return;
 			}
-			List<City> cities = GeneratorHelper.generateCities(citiesCount, panel.getWidth() - 10,
-					panel.getHeight() - 10);
+			List<City> cities = GeneratorHelper.generateCities(citiesCount, panel.getWidth(),
+					panel.getHeight(), 25);
 			setCities(cities);
 		}
 	};
@@ -469,7 +469,7 @@ public class GAMainWindow extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			JFileChooser fileopen = new JFileChooser();
-			fileopen.setCurrentDirectory(new File(defDirForData));
+			fileopen.setCurrentDirectory(new File(FileHelper.defDirForData));
 			int ret = fileopen.showOpenDialog(contentPane);
 			if (ret == JFileChooser.APPROVE_OPTION) {
 				try {
@@ -485,7 +485,7 @@ public class GAMainWindow extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			JFileChooser fileopen = new JFileChooser();
-			fileopen.setCurrentDirectory(new File(defDirForData));
+			fileopen.setCurrentDirectory(new File(FileHelper.defDirForData));
 			int ret = fileopen.showSaveDialog(contentPane);
 			if (ret == JFileChooser.APPROVE_OPTION) {
 				try {

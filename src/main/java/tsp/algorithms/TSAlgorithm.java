@@ -277,9 +277,9 @@ public abstract class TSAlgorithm implements Runnable {
 		public String toString() {
 			String geneString = "";
 			for (int i = 0; i < tourSize(); i++) {
-				geneString += getCity(i).id + " -> ";
+				geneString += getCity(i).id + 1 + " -> ";
 			}
-			geneString += getCity(0).id;
+			geneString += getCity(0).id + 1;
 			return geneString;
 		}
 	}
