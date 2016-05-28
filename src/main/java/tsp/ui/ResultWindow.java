@@ -18,6 +18,10 @@ import tsp.utils.CurrentResultForShowing;
 
 public class ResultWindow extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private DefaultListModel<CurrentResultForShowing> listModel;
 	private JList<String> list;

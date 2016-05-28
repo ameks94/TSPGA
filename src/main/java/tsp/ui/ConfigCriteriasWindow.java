@@ -43,11 +43,12 @@ public class ConfigCriteriasWindow extends JFrame {
 	 * Create the frame.
 	 */
 	public ConfigCriteriasWindow(GAMainWindow mainWindow) {
+		setTitle("Налаштування критеріїв");
 		this.mainWindow = mainWindow;
 		cities = mainWindow.getCities();
 		distances = TSAlgorithm.calculateDistances(cities);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 338, 381);
+		setBounds(100, 100, 389, 381);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -69,7 +70,7 @@ public class ConfigCriteriasWindow extends JFrame {
 		contentPane.add(generateCosts);
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 134, 305, 205);
+		scrollPane.setBounds(10, 134, 353, 205);
 		contentPane.add(scrollPane);
 
 		textArea = new JTextArea();
@@ -78,14 +79,14 @@ public class ConfigCriteriasWindow extends JFrame {
 		costWeightTf = new JTextField();
 		costWeightTf.setEnabled(InitialData.considerCostCriteria);
 		costWeightTf.setText(String.valueOf(InitialData.costAllowRange));
-		costWeightTf.setBounds(219, 39, 86, 20);
+		costWeightTf.setBounds(218, 39, 86, 20);
 		contentPane.add(costWeightTf);
 		costWeightTf.setColumns(10);
 
 		distanceWeightTf = new JTextField();
 		distanceWeightTf.setText(String.valueOf(InitialData.distanceAllowRange));
 		distanceWeightTf.setColumns(10);
-		distanceWeightTf.setBounds(219, 11, 86, 20);
+		distanceWeightTf.setBounds(218, 11, 86, 20);
 		contentPane.add(distanceWeightTf);
 
 		JLabel label = new JLabel("Допустима різниця відстані");
@@ -93,16 +94,16 @@ public class ConfigCriteriasWindow extends JFrame {
 		contentPane.add(label);
 
 		saveBtn = new JButton("Зберегти у файл");
-		saveBtn.setBounds(182, 69, 135, 23);
+		saveBtn.setBounds(182, 70, 181, 23);
 		saveBtn.addActionListener(saveAction);
 		contentPane.add(saveBtn);
 
-		JButton loadBtn = new JButton("Загрузити з файлу");
+		JButton loadBtn = new JButton("Завантажити з файлу");
 		loadBtn.setBounds(6, 69, 166, 23);
 		loadBtn.addActionListener(loadDataAction);
 		contentPane.add(loadBtn);
 		
-		button = new JButton("Прийняти");
+		button = new JButton("Прийняти налаштування");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				InitialData.distanceAllowRange = Double.valueOf(distanceWeightTf.getText());
@@ -113,7 +114,7 @@ public class ConfigCriteriasWindow extends JFrame {
 				// InitialData.considerTimeCriteria = considerTimeChb.isSelected();
 			}
 		});
-		button.setBounds(182, 103, 133, 23);
+		button.setBounds(182, 103, 181, 23);
 		contentPane.add(button);
 	}
 

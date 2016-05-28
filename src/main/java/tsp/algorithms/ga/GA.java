@@ -7,6 +7,7 @@ import tsp.algorithms.City;
 import tsp.algorithms.InitialData;
 import tsp.algorithms.TSAlgorithm;
 import tsp.algorithms.greedy.GreedyAlgorithm;
+import tsp.controllers.MainController;
 import tsp.ui.GAMainWindow;
 
 public class GA extends TSAlgorithm {
@@ -24,13 +25,18 @@ public class GA extends TSAlgorithm {
 	
 	// +add rout direction... rows
 	// +add activated- deactivated checkbox for restrictions
-	//TODO обавить начальный город.... или рандом
+	// + обавить начальный город.... или рандом
 	//TODO add cool windows placement -> cascade... или сохранить позиции
-	//TODO добавить отдельное окно для настройки всех параметров
+	//TODO добавить отдельное <i> для настройки всех параметров
 	//TODO добавить мутацию вторую
+	
+	// TODO подписать матрицу стоимости... что бі біло видно
+	// TODO .. добавить проверки, что и когда можно включать...
+	// TODO добавить вівод стоимости
+	// TODO добавить тултипі...
 
-	public GA(GAMainWindow mainWindow) {
-		super(mainWindow);
+	public GA(MainController mainController) {
+		super(mainController);
 	}
 
 	@Override
@@ -39,12 +45,12 @@ public class GA extends TSAlgorithm {
 		if (greedyInitialization) {
 			List<Tour> greedyTours;
 			if (populationCount > cities.size()) {
-				greedyTours = new GreedyAlgorithm(mainWindow).generateTours(cities.size());
+				greedyTours = new GreedyAlgorithm(mainController).generateTours(cities.size());
 				for (int i = 0; i < greedyTours.size(); i++) {
 					pop.saveTour(i, greedyTours.get(i));
 				}
 			} else {
-				greedyTours = new GreedyAlgorithm(mainWindow).generateTours(populationCount);
+				greedyTours = new GreedyAlgorithm(mainController).generateTours(populationCount);
 				for (int i = 0; i < greedyTours.size(); i++) {
 					pop.saveTour(i, greedyTours.get(i));
 				}

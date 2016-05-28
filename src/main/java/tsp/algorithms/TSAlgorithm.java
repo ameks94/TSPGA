@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.google.common.collect.Iterables;
 
+import tsp.controllers.MainController;
 import tsp.ui.CitiesPanel;
 import tsp.ui.GAMainWindow;
 import tsp.utils.CurrentResultForShowing;
@@ -26,6 +27,7 @@ public abstract class TSAlgorithm implements Runnable {
 	protected List<City> cities;
 	protected int iterationCount = 1;
 	protected boolean needCalculate = true;
+	protected MainController mainController;
 	protected GAMainWindow mainWindow;
 	protected double currDistance;
 	protected double lastDistance;
@@ -40,13 +42,14 @@ public abstract class TSAlgorithm implements Runnable {
 
 	private boolean needShowResult = false;
 
-	public TSAlgorithm(GAMainWindow mainWindow) {
-		this.mainWindow = mainWindow;
+	public TSAlgorithm(MainController mainController) {
+		this.mainController = mainController;
+		this.mainWindow = mainController.getMainWindow();
 		this.startCityIndex = mainWindow.getStartCityIndex();
 		this.cities = mainWindow.getCities();
 		this.outputPanel = mainWindow.getOutputPanel();
 		this.outputLabel = mainWindow.getOutputLable();
-		this.iterationResultArea = mainWindow.getTextArea();
+		this.iterationResultArea = mainController.resultIterationArea();
 		this.needShowResult = mainWindow.isDrawingNeeded();
 		this.distancesAtIterations = new HashMap<>();
 		initializeDistances();

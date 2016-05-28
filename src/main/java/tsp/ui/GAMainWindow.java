@@ -3,10 +3,6 @@ package tsp.ui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -14,45 +10,34 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.border.TitledBorder;
 
 import org.apache.log4j.Logger;
-import org.jfree.ui.RefineryUtilities;
 
 import tsp.algorithms.City;
 import tsp.algorithms.InitialData;
-import tsp.algorithms.TSAlgorithm;
-import tsp.algorithms.TSAlgorithmFactory;
 import tsp.algorithms.TSAlgorithmFactory.AlgorithmType;
-import tsp.ui.charts.TourChart;
+import tsp.controllers.MainController;
 import tsp.ui.drawers.DrawerFactory;
 import tsp.ui.drawers.DrawerFactory.DrawerType;
-import tsp.utils.FileHelper;
-import tsp.utils.GeneratorHelper;
-import tsp.utils.SerializationHelper;
-import javax.swing.border.TitledBorder;
-import javax.swing.UIManager;
-import javax.swing.JScrollPane;
 
 public class GAMainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private final Logger log = Logger.getLogger(getClass().getName());
-	private JPanel contentPane;
-	private CitiesPanel panel;
+	private JPanel myContentPane;
+	private CitiesPanel citiesPanel;
 	private JComboBox<AlgorithmType> cbAlgorithm;
 	private JLabel lblOptimalTour;
 	private JButton btnCalculate;
@@ -62,17 +47,8 @@ public class GAMainWindow extends JFrame {
 
 	private JLabel currentIterationLbl;
 	private JLabel currentTimeLbl;
-
-	private Timer timer;
-	private long startCalculationTime;
-
-	private ResultWindow resultWindow;
-	// private TextArea logArea;
-	// private JLabel lblLog;
 	private final String startCalculationText = "Розрахувати";
 	private final String stopCalculationText = "Зупинити обрахунок";
-	private Thread runningAlgorythm;
-	private TSAlgorithm algorithm;
 	private JTextField citiesCountTf;
 	private JTextField maxIterationCountTf;
 	private JTextField maxAffectIterationCountTf;
@@ -82,35 +58,40 @@ public class GAMainWindow extends JFrame {
 	private JTextField tournamentSizeTf;
 	private JCheckBox greedyInitializationChb;
 
-	JCheckBox showDistancesChb;
-	JCheckBox showTimesChb;
-	JCheckBox showCostsChb;
-	JCheckBox showDrawingChbx;
+	private JCheckBox showDistancesChb;
+	private JCheckBox showTimesChb;
+	private JCheckBox showCostsChb;
+	private JCheckBox showDrawingChbx;
+	
+	private MainController mainController;
 
 	/**
 	 * Create the frame.
 	 */
 	public GAMainWindow() {
 		super("GA");
+		setTitle("Гентичний алгоритм");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 895, 750);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		myContentPane = new JPanel();
+		myContentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(myContentPane);
+		myContentPane.setLayout(null);
 
+		mainController = new MainController(this);
+		
 		// Panel for drawing
-		panel = new CitiesPanel();
-		panel.setMainWindow(this);
-		panel.setBounds(10, 25, 601, 664);
-		contentPane.add(panel);
-		panel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
+		citiesPanel = new CitiesPanel();
+		citiesPanel.setMainWindow(this);
+		citiesPanel.setBounds(10, 25, 601, 664);
+		myContentPane.add(citiesPanel);
+		citiesPanel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		// panel.setBackground(Color.WHITE);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		citiesPanel.setLayout(new BoxLayout(citiesPanel, BoxLayout.X_AXIS));
 
 		JPanel panel_5 = new JPanel();
 		panel_5.setBounds(610, 25, 268, 664);
-		contentPane.add(panel_5);
+		myContentPane.add(panel_5);
 		panel_5.setLayout(null);
 
 		JPanel panel_2 = new JPanel();
@@ -221,7 +202,7 @@ public class GAMainWindow extends JFrame {
 		citiesCountTf.setText("20");
 
 		addCriteriasBtn = new JButton("Налаштувати критерії");
-		addCriteriasBtn.addActionListener(addCriteriasBtnAction);
+		addCriteriasBtn.addActionListener(mainController.addCriteriasBtnAction);
 		addCriteriasBtn.setBounds(6, 73, 247, 23);
 		panel_1.add(addCriteriasBtn);
 
@@ -270,9 +251,8 @@ public class GAMainWindow extends JFrame {
 		panel_4.add(lblOptimalTour);
 		lblOptimalTour.setForeground(Color.GREEN);
 		lblOptimalTour.setFont(new Font("Tahoma", Font.PLAIN, 16));
-		resultWindow = new ResultWindow(getOutputPanel(), getOutputLable());
 
-		JLabel label_4 = new JLabel("Поточна ітерація:");
+		JLabel label_4 = new JLabel("Поточна популяція:");
 		label_4.setBounds(6, 48, 115, 14);
 		panel_4.add(label_4);
 		label_4.setHorizontalAlignment(SwingConstants.LEFT);
@@ -299,7 +279,7 @@ public class GAMainWindow extends JFrame {
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_3.setLayout(null);
 
-		JLabel lblMax_1 = new JLabel("Max. кількість ітерацій");
+		JLabel lblMax_1 = new JLabel("Max. кількість популяцій");
 		lblMax_1.setBounds(6, 19, 150, 14);
 		panel_3.add(lblMax_1);
 		lblMax_1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -310,7 +290,7 @@ public class GAMainWindow extends JFrame {
 		maxIterationCountTf.setText(String.valueOf(InitialData.maxIterationCount));
 		maxIterationCountTf.setColumns(10);
 
-		JLabel lblMax = new JLabel("Max. ітерацій без покращення");
+		JLabel lblMax = new JLabel("Max. популяцій без покращення");
 		lblMax.setBounds(6, 44, 197, 14);
 		panel_3.add(lblMax);
 		lblMax.setHorizontalAlignment(SwingConstants.LEFT);
@@ -332,11 +312,11 @@ public class GAMainWindow extends JFrame {
 		panel_3.add(maxWorkTimeTf);
 		maxWorkTimeTf.setText("360");
 		maxWorkTimeTf.setColumns(10);
-		btnTestchart.addActionListener(btnTestChartAction);
+		btnTestchart.addActionListener(mainController.btnTestChartAction);
 
-		btnGenerate.addActionListener(btnGenerateAction);
-		btnClear.addActionListener(btnClearAction);
-		btnCalculate.addActionListener(btnCalculateAction);
+		btnGenerate.addActionListener(mainController.btnGenerateAction);
+		btnClear.addActionListener(mainController.btnClearAction);
+		btnCalculate.addActionListener(mainController.btnCalculateAction);
 		for (AlgorithmType alType : AlgorithmType.values()) {
 			cbAlgorithm.addItem(alType);
 		}
@@ -344,22 +324,22 @@ public class GAMainWindow extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBorderPainted(false);
 		menuBar.setBounds(10, 0, 941, 21);
-		contentPane.add(menuBar);
+		myContentPane.add(menuBar);
 
 		JMenu mnNewMenu = new JMenu("Файл");
 		menuBar.add(mnNewMenu);
 
 		JMenuItem saveDataToFileItem = new JMenuItem("Зберегти данні");
-		saveDataToFileItem.addActionListener(saveDataAction);
+		saveDataToFileItem.addActionListener(mainController.saveDataAction);
 		mnNewMenu.add(saveDataToFileItem);
 
 		JMenuItem loadDataFromFileItem = new JMenuItem("Загрузити данні");
-		loadDataFromFileItem.addActionListener(loadDataAction);
+		loadDataFromFileItem.addActionListener(mainController.loadDataAction);
 		mnNewMenu.add(loadDataFromFileItem);
 
 		showTimesChb = new JCheckBox("Показати час");
 		showTimesChb.setBounds(10, 111, 93, 23);
-		contentPane.add(showTimesChb);
+		myContentPane.add(showTimesChb);
 		showTimesChb.setForeground(Color.DARK_GRAY);
 		showTimesChb.setSelected(InitialData.showTimeCriteria);
 		showTimesChb.setHorizontalAlignment(SwingConstants.LEFT);
@@ -368,143 +348,15 @@ public class GAMainWindow extends JFrame {
 		});
 	}
 
-	private ActionListener addCriteriasBtnAction = new ActionListener() {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			ConfigCriteriasWindow confWind = new ConfigCriteriasWindow(getMainWindow());
-			confWind.setVisible(true);
-		}
-	};
-
-	private ActionListener btnGenerateAction = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// JFrame frame = new JFrame("Кількість міст?");
-			int citiesCount = Integer.valueOf(citiesCountTf.getText());
-			if (citiesCount == 0) {
-				return;
-			}
-			List<City> cities = GeneratorHelper.generateCities(citiesCount, panel.getWidth(),
-					panel.getHeight(), 25);
-			setCities(cities);
-		}
-	};
-
-	private ActionListener btnCalculateAction = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			if (btnCalculate.getText().equals(startCalculationText)) {
-				if (getCities() == null || getCities().isEmpty())
-					return;
-				setCalculated(false);
-				panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.CitiesPath));
-
-				if (isDrawingNeeded()) {
-					if (resultWindow != null && resultWindow.isShowing()) {
-						resultWindow.hide();
-					}
-					resultWindow = new ResultWindow(getOutputPanel(), getOutputLable());
-					resultWindow.setLocation(850, 0);
-					resultWindow.setVisible(true);
-				}
-
-				AlgorithmType selectedType = (AlgorithmType) cbAlgorithm.getSelectedItem();
-
-				initializeData();
-				algorithm = TSAlgorithmFactory.getTSAlgorithm(selectedType, getMainWindow());
-				runningAlgorythm = new Thread(algorithm);
-				timer = new Timer(10, updateTimeListener);
-				startCalculationTime = System.currentTimeMillis();
-				timer.start();
-				runningAlgorythm.start();
-
-			} else {
-				algorithm.stopCalculation();
-				algorithm.drawFinalResult();
-
-			}
-		}
-	};
-
-	private ActionListener updateTimeListener = new ActionListener() {
-		public void actionPerformed(ActionEvent evt) {
-			long spentTime = System.currentTimeMillis() - startCalculationTime;
-			if (algorithm.isCalculationProcessed() && spentTime < Long.valueOf(maxWorkTimeTf.getText()) * 1000) {
-				currentTimeLbl.setText(String.valueOf(spentTime) + " мс.");
-			} else {
-				timer.stop();
-				algorithm.stopCalculation();
-				algorithm.drawFinalResult();
-			}
-		}
-	};
-
-	private ActionListener btnClearAction = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			currentIterationLbl.setText("0");
-			lblOptimalTour.setText("0");
-			panel.clearAll();
-			panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
-			if (resultWindow != null && resultWindow.isShowing()) {
-				resultWindow.hide();
-			}
-			panel.repaint();
-		}
-	};
-
-	private ActionListener btnTestChartAction = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			final TourChart demo = new TourChart("Мінімальний шлях по ітераціям", algorithm.getIterationDistances());
-			demo.pack();
-			RefineryUtilities.centerFrameOnScreen(demo);
-			demo.setVisible(true);
-		}
-	};
-
-	private ActionListener loadDataAction = new ActionListener() {
-		@SuppressWarnings("unchecked")
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			JFileChooser fileopen = new JFileChooser();
-			fileopen.setCurrentDirectory(new File(FileHelper.defDirForData));
-			int ret = fileopen.showOpenDialog(contentPane);
-			if (ret == JFileChooser.APPROVE_OPTION) {
-				try {
-					setCities((List<City>) SerializationHelper.deserializeFromFile(fileopen.getSelectedFile()));
-				} catch (IOException | ClassNotFoundException e) {
-					log.error(e);
-				}
-			}
-		}
-	};
-
-	private ActionListener saveDataAction = new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			JFileChooser fileopen = new JFileChooser();
-			fileopen.setCurrentDirectory(new File(FileHelper.defDirForData));
-			int ret = fileopen.showSaveDialog(contentPane);
-			if (ret == JFileChooser.APPROVE_OPTION) {
-				try {
-					SerializationHelper.serializeToFile(getCities(), fileopen.getSelectedFile());
-				} catch (IOException e) {
-					log.error(e);
-				}
-			}
-		}
-	};
 	private JTextField startCityIndexTf;
 
 	public void setCities(List<City> cities) {
-		panel.setCities(cities);
-		panel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
-		panel.repaint();
+		citiesPanel.setCities(cities);
+		citiesPanel.setDrawerStrategy(DrawerFactory.getDrawerStrategy(DrawerType.Cities));
+		citiesPanel.repaint();
 	}
 
-	private void initializeData() {
+	public void initializeData() {
 		InitialData.maxIterationCount = Integer.valueOf(maxIterationCountTf.getText());
 		InitialData.maxIterationCountWithoutImproving = Integer.valueOf(maxAffectIterationCountTf.getText());
 		InitialData.mutationRate = Double.valueOf(mutationRateTf.getText());
@@ -550,7 +402,7 @@ public class GAMainWindow extends JFrame {
 	}
 
 	public List<City> getCities() {
-		return panel.getCities();
+		return citiesPanel.getCities();
 	}
 	
 	public int getStartCityIndex() {
@@ -562,18 +414,210 @@ public class GAMainWindow extends JFrame {
 	}
 
 	public CitiesPanel getOutputPanel() {
-		return panel;
+		return citiesPanel;
 	}
 
 	public JButton getCalculateBtn() {
 		return btnCalculate;
 	}
 
-	public DefaultListModel getTextArea() {
-		return resultWindow.getResultModel();
-	}
 
 	public GAMainWindow getMainWindow() {
 		return this;
 	}
+
+	public JPanel getMyContentPane() {
+		return myContentPane;
+	}
+
+	public void setMyContentPane(JPanel contentPane) {
+		this.myContentPane = contentPane;
+	}
+	
+	
+	public CitiesPanel getCitiesPanel() {
+		return citiesPanel;
+	}
+
+	public void setCitiesPanel(CitiesPanel citiesPanel) {
+		this.citiesPanel = citiesPanel;
+	}
+
+	public JComboBox<AlgorithmType> getCbAlgorithm() {
+		return cbAlgorithm;
+	}
+
+	public void setCbAlgorithm(JComboBox<AlgorithmType> cbAlgorithm) {
+		this.cbAlgorithm = cbAlgorithm;
+	}
+
+	public JLabel getLblOptimalTour() {
+		return lblOptimalTour;
+	}
+
+	public void setLblOptimalTour(JLabel lblOptimalTour) {
+		this.lblOptimalTour = lblOptimalTour;
+	}
+
+	public JButton getBtnCalculate() {
+		return btnCalculate;
+	}
+
+	public void setBtnCalculate(JButton btnCalculate) {
+		this.btnCalculate = btnCalculate;
+	}
+
+	public JButton getBtnClear() {
+		return btnClear;
+	}
+
+	public void setBtnClear(JButton btnClear) {
+		this.btnClear = btnClear;
+	}
+
+	public JButton getBtnGenerate() {
+		return btnGenerate;
+	}
+
+	public void setBtnGenerate(JButton btnGenerate) {
+		this.btnGenerate = btnGenerate;
+	}
+
+	public JButton getAddCriteriasBtn() {
+		return addCriteriasBtn;
+	}
+
+	public void setAddCriteriasBtn(JButton addCriteriasBtn) {
+		this.addCriteriasBtn = addCriteriasBtn;
+	}
+
+	public JLabel getCurrentIterationLbl() {
+		return currentIterationLbl;
+	}
+
+	public void setCurrentIterationLbl(JLabel currentIterationLbl) {
+		this.currentIterationLbl = currentIterationLbl;
+	}
+
+	public JLabel getCurrentTimeLbl() {
+		return currentTimeLbl;
+	}
+
+	public void setCurrentTimeLbl(JLabel currentTimeLbl) {
+		this.currentTimeLbl = currentTimeLbl;
+	}
+
+	public JTextField getCitiesCountTf() {
+		return citiesCountTf;
+	}
+
+	public void setCitiesCountTf(JTextField citiesCountTf) {
+		this.citiesCountTf = citiesCountTf;
+	}
+
+	public JTextField getMaxIterationCountTf() {
+		return maxIterationCountTf;
+	}
+
+	public void setMaxIterationCountTf(JTextField maxIterationCountTf) {
+		this.maxIterationCountTf = maxIterationCountTf;
+	}
+
+	public JTextField getMaxAffectIterationCountTf() {
+		return maxAffectIterationCountTf;
+	}
+
+	public void setMaxAffectIterationCountTf(JTextField maxAffectIterationCountTf) {
+		this.maxAffectIterationCountTf = maxAffectIterationCountTf;
+	}
+
+	public JTextField getMaxWorkTimeTf() {
+		return maxWorkTimeTf;
+	}
+
+	public void setMaxWorkTimeTf(JTextField maxWorkTimeTf) {
+		this.maxWorkTimeTf = maxWorkTimeTf;
+	}
+
+	public JTextField getMutationRateTf() {
+		return mutationRateTf;
+	}
+
+	public void setMutationRateTf(JTextField mutationRateTf) {
+		this.mutationRateTf = mutationRateTf;
+	}
+
+	public JTextField getPopulationCountTf() {
+		return populationCountTf;
+	}
+
+	public void setPopulationCountTf(JTextField populationCountTf) {
+		this.populationCountTf = populationCountTf;
+	}
+
+	public JTextField getTournamentSizeTf() {
+		return tournamentSizeTf;
+	}
+
+	public void setTournamentSizeTf(JTextField tournamentSizeTf) {
+		this.tournamentSizeTf = tournamentSizeTf;
+	}
+
+	public JCheckBox getGreedyInitializationChb() {
+		return greedyInitializationChb;
+	}
+
+	public void setGreedyInitializationChb(JCheckBox greedyInitializationChb) {
+		this.greedyInitializationChb = greedyInitializationChb;
+	}
+
+	public JCheckBox getShowDistancesChb() {
+		return showDistancesChb;
+	}
+
+	public void setShowDistancesChb(JCheckBox showDistancesChb) {
+		this.showDistancesChb = showDistancesChb;
+	}
+
+	public JCheckBox getShowTimesChb() {
+		return showTimesChb;
+	}
+
+	public void setShowTimesChb(JCheckBox showTimesChb) {
+		this.showTimesChb = showTimesChb;
+	}
+
+	public JCheckBox getShowCostsChb() {
+		return showCostsChb;
+	}
+
+	public void setShowCostsChb(JCheckBox showCostsChb) {
+		this.showCostsChb = showCostsChb;
+	}
+
+	public JCheckBox getShowDrawingChbx() {
+		return showDrawingChbx;
+	}
+
+	public void setShowDrawingChbx(JCheckBox showDrawingChbx) {
+		this.showDrawingChbx = showDrawingChbx;
+	}
+
+	public JTextField getStartCityIndexTf() {
+		return startCityIndexTf;
+	}
+
+	public void setStartCityIndexTf(JTextField startCityIndexTf) {
+		this.startCityIndexTf = startCityIndexTf;
+	}
+
+	public String getStartCalculationText() {
+		return startCalculationText;
+	}
+
+	public String getStopCalculationText() {
+		return stopCalculationText;
+	}
+	
+	
 }

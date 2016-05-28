@@ -5,6 +5,7 @@ import java.util.List;
 
 import tsp.algorithms.City;
 import tsp.algorithms.TSAlgorithm;
+import tsp.controllers.MainController;
 import tsp.ui.GAMainWindow;
 
 public class GreedyAlgorithm extends TSAlgorithm{
@@ -12,8 +13,8 @@ public class GreedyAlgorithm extends TSAlgorithm{
 	private int distance = 0;
 	private List<City> optCities = new ArrayList<City>();
 	
-	public GreedyAlgorithm(GAMainWindow mainWindow) {
-		super(mainWindow);
+	public GreedyAlgorithm(MainController mainController) {
+		super(mainController);
 	}
 	
 	/**@param toursCount - not more then cities.size()*/

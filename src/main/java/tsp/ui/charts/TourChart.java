@@ -29,7 +29,7 @@ public class TourChart extends JFrame {
 		this.distances = distances;
 	      JFreeChart xylineChart = ChartFactory.createXYLineChart(
 	         chartTitle ,
-	         "Номер ітерації" ,
+	         "Номер покоління" ,
 	         "Мінімальний шлях" ,
 	         createDataset() ,
 	         PlotOrientation.VERTICAL ,

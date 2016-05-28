@@ -6,6 +6,7 @@ import java.util.List;
 import tsp.algorithms.City;
 import tsp.algorithms.InitialData;
 import tsp.algorithms.TSAlgorithm;
+import tsp.controllers.MainController;
 import tsp.ui.GAMainWindow;
 
 /**
@@ -20,8 +21,8 @@ public class Solver extends TSAlgorithm{
 	 *
 	 * @param cities An ArrayList of City's
 	 */
-	public Solver(GAMainWindow mainWindow) {
-		super(mainWindow);
+	public Solver(MainController mainController) {
+		super(mainController);
 	}
 
 	/**
