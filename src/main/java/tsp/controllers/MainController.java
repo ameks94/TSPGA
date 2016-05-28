@@ -43,7 +43,7 @@ public class MainController {
 		resultWindow = new ResultWindow(mainWindow.getOutputPanel(), mainWindow.getOutputLable());
 	}
 	
-	public DefaultListModel resultIterationArea() {
+	public DefaultListModel<?> resultIterationArea() {
 		return resultWindow.getResultModel();
 	}
 //	public DefaultListModel getTextArea() {
@@ -78,6 +78,7 @@ public class MainController {
 	};
 
 	public ActionListener btnCalculateAction = new ActionListener() {
+		@SuppressWarnings("deprecation")
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			if (mainWindow.getBtnCalculate().getText().equals(mainWindow.getStartCalculationText())) {
@@ -127,6 +128,7 @@ public class MainController {
 	};
 
 	public ActionListener btnClearAction = new ActionListener() {
+		@SuppressWarnings("deprecation")
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			mainWindow.getCurrentIterationLbl().setText("0");
