@@ -21,15 +21,15 @@ public class GA extends TSAlgorithm {
 	private final int maxIterationCount = InitialData.maxIterationCount;
 	private final int maxIterationCountWithoutImproving = InitialData.maxIterationCountWithoutImproving;
 
-	//TODO - добавить мутацию другую + настрока их
-	
+	// TODO - добавить мутацию другую + настрока их
+
 	// +add rout direction... rows
 	// +add activated- deactivated checkbox for restrictions
 	// + обавить начальный город.... или рандом
-	//TODO add cool windows placement -> cascade... или сохранить позиции
-	//TODO добавить отдельное <i> для настройки всех параметров
-	//TODO добавить мутацию вторую
-	
+	// TODO add cool windows placement -> cascade... или сохранить позиции
+	// TODO добавить отдельное <i> для настройки всех параметров
+	// TODO добавить мутацию вторую
+
 	// TODO подписать матрицу стоимости... что бі біло видно
 	// TODO .. добавить проверки, что и когда можно включать...
 	// TODO добавить вівод стоимости
@@ -162,6 +162,22 @@ public class GA extends TSAlgorithm {
 		}
 	}
 
+	// Mutate simple, one gen with set probability
+	private void mutateSimple(Tour tour) {
+		if (Math.random() <= mutationRate) {
+			int tourPos1 = (int) (tour.tourSize() * Math.random());
+			int tourPos2 = (int) (tour.tourSize() * Math.random());
+
+			// Get the cities at target position in tour
+			City city1 = tour.getCity(tourPos1);
+			City city2 = tour.getCity(tourPos2);
+
+			// Swap them around
+			tour.setCity(tourPos2, city1);
+			tour.setCity(tourPos1, city2);
+		}
+	}
+
 	// Selects candidate tour for crossover
 	private Tour tournamentSelection(Population pop) {
 		// Create a tournament population
@@ -212,7 +228,8 @@ public class GA extends TSAlgorithm {
 			return tours[index];
 		}
 
-		//TODO брать лучший по... сначало первый критерий... потом второй... потом третий...
+		// TODO брать лучший по... сначало первый критерий... потом второй...
+		// потом третий...
 		// как сортировка по 3 значениям
 		// Gets the best tour in the population
 		public Tour getFittest() {
@@ -220,18 +237,18 @@ public class GA extends TSAlgorithm {
 				return fittestCash;
 			}
 			Tour fittest = tours[0];
-			
+
 			if (InitialData.considerCostCriteria) {
 				// Loop through individuals to find fittest
 				for (int i = 1; i < populationSize(); i++) {
 					// real differences
 					double diffDistances = fittest.getFitnessDistance() - getTour(i).getFitnessDistance();
 					double diffCosts = fittest.getFitnessCosts() - getTour(i).getFitnessCosts();
-					
+
 					// calculate weight of every difference...
 					double weightDist = Math.abs(diffDistances / InitialData.distanceAllowRange);
 					double weightCosts = Math.abs(diffCosts / InitialData.costAllowRange);
-					
+
 					if (weightDist - weightCosts >= 0) {
 						if (diffDistances > 0) {
 							fittest = getTour(i);

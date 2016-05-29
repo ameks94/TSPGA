@@ -279,7 +279,7 @@ public class GAMainWindow extends JFrame {
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		panel_3.setLayout(null);
 
-		JLabel lblMax_1 = new JLabel("Max. кількість популяцій");
+		JLabel lblMax_1 = new JLabel("Макс. популяцій");
 		lblMax_1.setBounds(6, 19, 150, 14);
 		panel_3.add(lblMax_1);
 		lblMax_1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -290,7 +290,7 @@ public class GAMainWindow extends JFrame {
 		maxIterationCountTf.setText(String.valueOf(InitialData.maxIterationCount));
 		maxIterationCountTf.setColumns(10);
 
-		JLabel lblMax = new JLabel("Max. популяцій без покращення");
+		JLabel lblMax = new JLabel("Макс. популяцій без покращення");
 		lblMax.setBounds(6, 44, 197, 14);
 		panel_3.add(lblMax);
 		lblMax.setHorizontalAlignment(SwingConstants.LEFT);
@@ -303,7 +303,7 @@ public class GAMainWindow extends JFrame {
 		maxAffectIterationCountTf.setToolTipText("Максимальна кількість ітерацій без покращення результату");
 		maxAffectIterationCountTf.setColumns(10);
 
-		JLabel label_1 = new JLabel("Максимальний час роботи (с.)");
+		JLabel label_1 = new JLabel("Макс. час роботи (с.)");
 		label_1.setBounds(6, 69, 197, 14);
 		panel_3.add(label_1);
 

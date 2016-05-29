@@ -11,19 +11,13 @@ public class TSAlgorithmFactory {
 		GA {
 			@Override
 			public String toString() {
-				return "GA";
+				return "ГА";
 			}
 		}, 
 		GREEDY {
 			@Override
 			public String toString() {
-				return "GREEDY";
-			}
-		},
-		BRANCH_BOUND {
-			@Override
-			public String toString() {
-				return "BRANCH_BOUND";
+				return "Жадібний";
 			}
 		}
 
@@ -36,8 +30,6 @@ public class TSAlgorithmFactory {
 			return new GA(mainController);
 		case GREEDY:
 			return new GreedyAlgorithm(mainController);
-		case BRANCH_BOUND:
-			return new Solver(mainController);
 		}	
 		return null;
 
