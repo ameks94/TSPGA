@@ -25,7 +25,7 @@ public class InitialData {
 	
 	static {
 		tournamentSize = 10;
-		populationCount = 100;
+		populationCount = 10_000;
 		mutationRate = 1. / populationCount;
 		
 		maxIterationCount = 500_000;
