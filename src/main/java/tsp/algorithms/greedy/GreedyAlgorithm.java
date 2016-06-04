@@ -32,7 +32,7 @@ public class GreedyAlgorithm extends TSAlgorithm{
 	
 	@Override
 	public void run() {
-		processCity(cities.get(0));
+		processCity(cities.get(startCityIndex));
 		setResult(new Tour(optCities));
 		stopCalculation();
 		drawFinalResult();

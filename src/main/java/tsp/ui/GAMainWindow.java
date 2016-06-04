@@ -72,7 +72,7 @@ public class GAMainWindow extends JFrame {
 		super("GA");
 		setTitle("Гентичний алгоритм");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 895, 750);
+		setBounds(100, 100, 915, 750);
 		myContentPane = new JPanel();
 		myContentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(myContentPane);
@@ -83,14 +83,14 @@ public class GAMainWindow extends JFrame {
 		// Panel for drawing
 		citiesPanel = new CitiesPanel();
 		citiesPanel.setMainWindow(this);
-		citiesPanel.setBounds(10, 25, 601, 664);
+		citiesPanel.setBounds(0, 25, 633, 664);
 		myContentPane.add(citiesPanel);
 		citiesPanel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
 		// panel.setBackground(Color.WHITE);
 		citiesPanel.setLayout(new BoxLayout(citiesPanel, BoxLayout.X_AXIS));
 
 		JPanel panel_5 = new JPanel();
-		panel_5.setBounds(610, 25, 268, 664);
+		panel_5.setBounds(631, 25, 268, 664);
 		myContentPane.add(panel_5);
 		panel_5.setLayout(null);
 

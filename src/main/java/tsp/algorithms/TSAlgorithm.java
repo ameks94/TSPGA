@@ -38,7 +38,7 @@ public abstract class TSAlgorithm implements Runnable {
 	private Tour currentResult;
 	private Map<Integer, Double> distancesAtIterations;
 	private DefaultListModel iterationResultArea;
-	private int startCityIndex = 0;
+	protected int startCityIndex = 0;
 
 	private boolean needShowResult = false;
 
