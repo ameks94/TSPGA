@@ -1,23 +1,14 @@
 package tsp.algorithms;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
-
-import org.apache.log4j.Logger;
-
 import com.google.common.collect.Iterables;
-
+import org.apache.log4j.Logger;
 import tsp.controllers.MainController;
 import tsp.ui.CitiesPanel;
 import tsp.ui.GAMainWindow;
 import tsp.utils.CurrentResultForShowing;
+
+import javax.swing.*;
+import java.util.*;
 
 public abstract class TSAlgorithm implements Runnable {
 

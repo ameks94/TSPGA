@@ -1,10 +1,10 @@
 package tsp;
 
-import java.awt.EventQueue;
-
 import tsp.ui.GAMainWindow;
 
-public class Main {
+import java.awt.*;
+
+class Main {
 	/**
 	 * Launch the application.
 	 */
