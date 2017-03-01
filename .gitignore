@@ -50,3 +50,4 @@ hs_err_pid*
 /.idea
 /install4j/targetInstall4j
 /log
+node-modules/
